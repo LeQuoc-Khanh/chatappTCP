@@ -1,0 +1,33 @@
+# Visual Studio
+.vs/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build Folders
+bin/
+obj/
+Debug/
+Release/
+
+# Rider
+.idea/
+
+# NuGet
+*.nupkg
+packages/
+
+# Visual Studio database files
+*.mdf
+*.ldf
+
+# VS index files
+*.vsidx
+
+# Logs
+*.log
+
+# Publish
+*.Publish.xml
