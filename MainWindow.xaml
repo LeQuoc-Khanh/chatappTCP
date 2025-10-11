@@ -5,8 +5,49 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:chatapp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-
-    </Grid>
+        x:Name="mainWindow"
+        AllowsTransparency="True"
+        Background="Transparent"
+        FontSize="15"
+        Height="768"
+        Width="1250"
+        ResizeMode="NoResize"
+        Title="Chat App"
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen">
+    <!--Structuring Mainwindow -->
+    <Border
+        CornerRadius="20"
+        Background="WhiteSmoke">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <!--Title Bar-->
+            <Border
+                Background="#49a078"
+                CornerRadius="20,20,0,0"
+                Grid.ColumnSpan="3"
+                Height="30"
+                MouseDown="Border_MouseDown">
+                <Grid>
+                    <TextBlock
+                        Text="{Binding Title, ElementName=mainWindow}"
+                        HorizontalAlignment="Left"
+                        Margin="15,0"
+                        VerticalAlignment="Center"
+                        Foreground="White"
+                        FontSize="22"
+                        FontWeight="Bold"/>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
 </Window>
