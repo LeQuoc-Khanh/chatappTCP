@@ -14,10 +14,57 @@
                     <RowDefinition MinHeight="6"/>
                     <RowDefinition MinHeight="Auto"/>
                 </Grid.RowDefinitions>
+                <Grid>
+                    <Ellipse
+                    Name="outerEllipse"
+                    Width="55"
+                    Height="55"
+                    Stretch="Uniform"
+                    StrokeThickness="1"
+                    Stroke="#49a078"
+                    StrokeDashArray="5"
+                    StrokeDashCap="Round"
+                    VerticalAlignment="Center"
+                HorizontalAlignment="Center"/>
+
+                <Ellipse
+                    Name="innerEllipse"
+                    Width="50"
+                    Height="50"
+                    Stretch="Uniform"
+                    VerticalAlignment="Center"
+                HorizontalAlignment="Center">
+                </Ellipse>
+
+                    <Path
+                    Data="{StaticResource addSign}"
+                    Fill="#dce1de"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    />
+            </Grid>
+
+                <!--Contact Profile Ellipse-->
+                <Ellipse
+                     Name="contactPhotoEllipse"
+                     Width="26"
+                     Height="26"
+                     Stretch="Uniform"
+                     StrokeThickness="2"
+                     Stroke="#dce1de"
+                     VerticalAlignment="Bottom"
+                HorizontalAlignment="Right"/>
+                
+                <!--COntact Name-->
+                <TextBlock
+                    Grid.Row="2"
+                    Text="CName"
+                    TextTrimming="CharacterEllipsis"
+                    TextAlignment="Center"/>
             </Grid>
         </DataTemplate>
     </UserControl.Resources>
-    <ItemsControl>
+    <ItemsControl ItemTemplate="{StaticResource thumbsTemplate}">
         <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
                 <StackPanel Orientation="Horizontal"/>
