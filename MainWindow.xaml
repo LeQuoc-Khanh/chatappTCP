@@ -74,7 +74,7 @@
             </Border>
 
             <!-- COntact chat list -->
-            <Grid Grid.Row="1" MaxWidth="406">
+            <Grid Grid.Row="1" MinWidth="406">
                 <Grid.RowDefinitions>
                     <!--Title & Search Options-->
                     <RowDefinition Height="Auto"/>
@@ -147,6 +147,9 @@
                         VerticalAlignment="Stretch"
                         />
                 </Border>
+                
+                <!--Region Status Thumbnails-->
+                
             </Grid>
         </Grid>
     </Border>
