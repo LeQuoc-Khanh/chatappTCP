@@ -25,9 +25,9 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>  <!--Column for contact Chat list-->
+                <ColumnDefinition/>         <!--Conversation Area-->
+                <ColumnDefinition Width="Auto"/>  <!--Profile Infor-->
             </Grid.ColumnDefinitions>
             
             <!--Title Bar-->
@@ -35,7 +35,6 @@
                 Background="#49a078"
                 CornerRadius="20,20,0,0"
                 Grid.ColumnSpan="3"
-                Height="30"
                 MouseDown="Border_MouseDown">
                 <Grid>
                     <TextBlock
@@ -46,6 +45,26 @@
                         Foreground="White"
                         FontSize="22"
                         FontWeight="Bold"/>
+                    
+                    <!--Windows Button-->
+                    <StackPanel
+                        HorizontalAlignment="Right"
+                        Margin="10,0"
+                        Orientation="Horizontal" >
+                        <Button x:Name="btnMinimize"
+                                Content="{StaticResource minimize}"
+                                Click="btnMinimize_Click"
+                                Style="{StaticResource IconButtonStyle}"/>
+                        <Button x:Name="btnMaximize"
+                                Content="{StaticResource maximize}"
+                                Click="btnMaximize_Click"
+                                Style="{StaticResource IconButtonStyle}"/>
+                        <Button x:Name="btnClose"
+                                Content="{StaticResource close}"
+                                Foreground="Red"
+                                Click="btnClose_Click"
+                                Style="{StaticResource IconButtonStyle}"/>
+                    </StackPanel>
                 </Grid>
             </Border>
         </Grid>
