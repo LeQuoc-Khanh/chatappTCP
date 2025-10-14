@@ -72,7 +72,7 @@ namespace chatapp.ViewModels
         #endregion
 
         #region Chat List
-
+        public ObservableCollection<ChatListData> Chats { get; set; }
         #endregion
         public ViewModel()
         {
