@@ -72,7 +72,26 @@ namespace chatapp.ViewModels
         #endregion
 
         #region Chat List
+        #region Properties
         public ObservableCollection<ChatListData> Chats { get; set; }
+        #endregion
+
+        #region Logics
+        void LoadChats()
+        {
+            Chats = new ObservableCollection<ChatListData>()
+            {
+                new ChatListData
+                {
+                    ContactName = "Khanh",
+                    ContactPhoto = new Uri("/assets/6.jpg",UriKind.RelativeOrAbsolute),
+                    Message="Hello",
+                    LastMessageTime="Tue, 12:58 PM"
+                }
+            };
+            OnPropertyChanged();
+        }
+        #endregion
         #endregion
         public ViewModel()
         {

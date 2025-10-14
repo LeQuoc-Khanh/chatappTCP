@@ -6,9 +6,26 @@
              xmlns:local="clr-namespace:chatapp.CustomControls"
              xmlns:viewmodels="clr-namespace:chatapp.ViewModels"
              mc:Ignorable="d" MinHeight="406">
-    <Grid>
+    <UserControl.Resources>
+        <DataTemplate x:Key="ChatButtonItemTemplate">
+            <Grid>
+                
+            </Grid>
+        </DataTemplate>
+    </UserControl.Resources>
+    <Grid Margin="15,0">
         <StackPanel>
-            <ItemsControl ItemsSource="{Binding}">
+            <StackPanel Orientation="Horizontal">
+                <Path Data="{StaticResource allchats}"
+                      Style="{StaticResource {x:Type Path}}"/>
+                <TextBlock
+                   Text="All Chats"
+                   FontWeight="SemiBold"
+                   VerticalAlignment="Center"/>
+            </StackPanel>
+            <ItemsControl
+                ItemsSource="{Binding Chats}"
+                ItemTemplate="{StaticResource ChatButtonItemTemplate}">
                 <ItemsControl.DataContext>
                     <viewmodels:ViewModel/>
                 </ItemsControl.DataContext>
