@@ -86,7 +86,36 @@ namespace chatapp.ViewModels
                     ContactName = "Khanh",
                     ContactPhoto = new Uri("/assets/6.jpg",UriKind.RelativeOrAbsolute),
                     Message="Hello",
-                    LastMessageTime="Tue, 12:58 PM"
+                    LastMessageTime="Tue, 12:58 PM",
+                    ChatIsSelected=true
+                },
+                new ChatListData
+                {
+                    ContactName = "Khoa",
+                    ContactPhoto = new Uri("/assets/6.jpg",UriKind.RelativeOrAbsolute),
+                    Message="Hello",
+                    LastMessageTime="Tue, 12:58 PM",
+                },
+                new ChatListData
+                {
+                    ContactName = "Linh",
+                    ContactPhoto = new Uri("/assets/6.jpg",UriKind.RelativeOrAbsolute),
+                    Message="Hello",
+                    LastMessageTime="Tue, 12:58 PM",
+                },
+                new ChatListData
+                {
+                    ContactName = "Kiet",
+                    ContactPhoto = new Uri("/assets/6.jpg",UriKind.RelativeOrAbsolute),
+                    Message="Hello",
+                    LastMessageTime="Tue, 12:58 PM",
+                },
+                new ChatListData
+                {
+                    ContactName = "Huy",
+                    ContactPhoto = new Uri("/assets/6.jpg",UriKind.RelativeOrAbsolute),
+                    Message="Hello",
+                    LastMessageTime="Tue, 12:58 PM",
                 }
             };
             OnPropertyChanged();
@@ -96,6 +125,7 @@ namespace chatapp.ViewModels
         public ViewModel()
         {
            LoadStatusThumbs();
+            LoadChats();
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

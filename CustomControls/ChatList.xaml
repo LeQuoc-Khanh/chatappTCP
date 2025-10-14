@@ -8,9 +8,92 @@
              mc:Ignorable="d" MinHeight="406">
     <UserControl.Resources>
         <DataTemplate x:Key="ChatButtonItemTemplate">
-            <Grid>
-                
-            </Grid>
+            <RadioButton GroupName="ChatButton">
+                <RadioButton.Style>
+                    <Style TargetType="{x:Type ToggleButton}">
+                        <Setter Property="SnapsToDevicePixels" Value="True"/>
+                        <Setter Property="MinHeight" Value="80"/>
+                        <Setter Property="Padding" Value="10"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Content" Value="{Binding ContactName}"/>
+                        <!--<Setter Property="IsChecked" Value="{Binding ChatIsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>-->
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                                    <Border
+                                        Background="{TemplateBinding Background}"
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        CornerRadius="20"
+                                        Padding="{TemplateBinding Padding}"
+                                        SnapsToDevicePixels="True"
+                                        x:Name="border">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            
+                                            <!--#region Contact details-->
+                                            <Grid
+                                                Grid.Row="0">
+                                                <Grid.ColumnDefinitions>
+                                                    <!--Profile Photo-->
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    
+                                                    <!--Contact Name & Message-->
+                                                    <ColumnDefinition/>
+                                                    
+                                                    <!--Last Message Time-->
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <Ellipse>
+                                                    <Ellipse.Fill>
+                                                        <ImageBrush 
+                                                            Stretch="UniformToFill"
+                                                            ImageSource="{Binding ContactPhoto}"/>
+                                                    </Ellipse.Fill>
+                                                </Ellipse>
+                                                
+                                                <!--Contact Name & Messagea-->
+                                                <Grid
+                                                    Grid.Column="1"
+                                                    Margin="20,0">
+                                                    <Grid.RowDefinitions>
+                                                        <!--Name-->
+                                                        <RowDefinition/>
+                                                        <!--Message-->
+                                                        <RowDefinition/>
+                                                    </Grid.RowDefinitions>
+                                                    
+                                                    <TextBlock
+                                                        Text="{Binding ContactName}"
+                                                        FontSize="20"
+                                                        FontWeight="SemiBold"/>
+                                                    <TextBlock
+                                                        Grid.Row="1"
+                                                        Text="{Binding Message}"
+                                                        FontWeight="SemiBold"/>
+                                                    
+                                                </Grid>
+                                            </Grid>
+                                            
+                                            <!--#endregion-->
+
+                                            <!--#region Options-->
+                                            <!--#endregion-->
+                                        </Grid>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>          
+                </RadioButton.Style>
+            </RadioButton>
         </DataTemplate>
     </UserControl.Resources>
     <Grid Margin="25,15">
