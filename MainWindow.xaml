@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:chatapp"
         xmlns:customcontrols="clr-namespace:chatapp.CustomControls"
+        xmlns:viewmodels="clr-namespace:chatapp.ViewModels"
         mc:Ignorable="d"
         x:Name="mainWindow"
         AllowsTransparency="True"
@@ -151,6 +152,8 @@
                 
                 <!--Region Status Thumbnails-->
                 <customcontrols:StatusThumbs Grid.Row="2"/>
+
+                <customcontrols:ChatList Grid.Row="3"/>
             </Grid>
         </Grid>
     </Border>
