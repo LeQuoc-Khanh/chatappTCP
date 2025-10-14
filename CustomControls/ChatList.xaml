@@ -51,15 +51,15 @@
                                                     <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
 
-                                                <Ellipse>
+                                                <Ellipse Width="50" Height="50">
                                                     <Ellipse.Fill>
                                                         <ImageBrush 
                                                             Stretch="UniformToFill"
-                                                            ImageSource="{Binding ContactPhoto}"/>
+                                                            ImageSource="{Binding ContactPhoto, FallbackValue='/assets/6.jpg', TargetNullValue='/assets/6.jpg', UpdateSourceTrigger=PropertyChanged}"/>
                                                     </Ellipse.Fill>
                                                 </Ellipse>
                                                 
-                                                <!--Contact Name & Messagea-->
+                                                <!--#region Contact Name & Messagea-->
                                                 <Grid
                                                     Grid.Column="1"
                                                     Margin="20,0">
@@ -69,22 +69,73 @@
                                                         <!--Message-->
                                                         <RowDefinition/>
                                                     </Grid.RowDefinitions>
-                                                    
+
                                                     <TextBlock
                                                         Text="{Binding ContactName}"
-                                                        FontSize="20"
-                                                        FontWeight="SemiBold"/>
+                                                        FontSize="15">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="{x:Type TextBlock}">
+                                                                <Setter Property="FontWeight" Value="SemiBold"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType={x:Type ToggleButton}}}" Value="True">
+                                                                        <Setter Property="FontWeight" Value="Bold"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
                                                     <TextBlock
                                                         Grid.Row="1"
-                                                        Text="{Binding Message}"
-                                                        FontWeight="SemiBold"/>
+                                                        Text="{Binding Message}">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="{x:Type TextBlock}">
+                                                                <Setter Property="FontWeight" Value="Normal"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType={x:Type ToggleButton}}}" Value="True">
+                                                                        <Setter Property="FontWeight" Value="SemiBold"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
                                                     
                                                 </Grid>
+                                                <!--#endregion-->
+                                                
+                                                <!--Last Message Time-->
+                                                <Grid Grid.Column="2">
+                                                    <TextBlock
+                                                        Text="{Binding LastMessageTime}"
+                                                        HorizontalAlignment="Right"/>
+                                                </Grid>
+                                                <Separator
+                                                    Grid.Column="1"
+                                                     BorderThickness=".5"
+                                                     BorderBrush="WhiteSmoke"
+                                                     VerticalAlignment="Bottom"/>
                                             </Grid>
                                             
                                             <!--#endregion-->
 
                                             <!--#region Options-->
+                                            
+                                            <Grid 
+                                                Grid.Row="1"
+                                                Height="Auto">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="50"/>
+                                                    <ColumnDefinition/>
+                                                </Grid.ColumnDefinitions>
+                                                <!--Optines Button-->
+                                                <UniformGrid 
+                                                    Grid.Column="1" 
+                                                    Columns="4">
+                                                    <Button Content="{StaticResource pinned}" Style="{StaticResource IconButtonStyle}"/>
+                                                    <Button Content="{StaticResource archive}" Style="{StaticResource IconButtonStyle}"/>
+                                                    <Button Content="{StaticResource mute}" Style="{StaticResource IconButtonStyle}"/>
+                                                    <Button Content="{StaticResource trash}" Style="{StaticResource IconButtonStyle}"/>
+                                                </UniformGrid>
+                                            </Grid>
                                             <!--#endregion-->
                                         </Grid>
                                     </Border>
@@ -96,29 +147,32 @@
             </RadioButton>
         </DataTemplate>
     </UserControl.Resources>
-    <Grid Margin="25,15">
-        <StackPanel>
-            <!-- Title-->
-            <StackPanel Orientation="Horizontal">
-                <Path
-                    Fill="Black"
-                    Data="{StaticResource allchats}"
-                    Style="{StaticResource {x:Type Path}}"/>
-                <TextBlock
-                    Margin="10,0"
-                   Text="All Chats"
-                   FontWeight="SemiBold"
-                   VerticalAlignment="Center"/>
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+        <Grid Margin="25,15">
+            <StackPanel>
+                <!-- Title-->
+                <StackPanel Orientation="Horizontal">
+                    <Path
+                      Fill="Black"
+                      Data="{StaticResource allchats}"
+                      Style="{StaticResource {x:Type Path}}"/>
+                    <TextBlock
+                      Margin="10,0"
+                      Text="All Chats"
+                      FontWeight="SemiBold"
+                      VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <!--Chat List-->
+                <ItemsControl
+                        ItemsSource="{Binding Chats}"
+                        ItemTemplate="{StaticResource ChatButtonItemTemplate}"
+                        Padding="0,15">
+                    <ItemsControl.DataContext>
+                        <viewmodels:ViewModel/>
+                    </ItemsControl.DataContext>
+                </ItemsControl>
             </StackPanel>
-            
-            <!--Chat List-->
-            <ItemsControl
-                ItemsSource="{Binding Chats}"
-                ItemTemplate="{StaticResource ChatButtonItemTemplate}">
-                <ItemsControl.DataContext>
-                    <viewmodels:ViewModel/>
-                </ItemsControl.DataContext>
-            </ItemsControl>
-        </StackPanel>
-    </Grid>
+        </Grid>
+    </ScrollViewer>
 </UserControl>

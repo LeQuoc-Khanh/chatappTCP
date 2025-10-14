@@ -92,28 +92,28 @@ namespace chatapp.ViewModels
                 new ChatListData
                 {
                     ContactName = "Khoa",
-                    ContactPhoto = new Uri("/assets/6.jpg",UriKind.RelativeOrAbsolute),
+                    ContactPhoto = new Uri("/assets/2.jpg",UriKind.RelativeOrAbsolute),
                     Message="Hello",
                     LastMessageTime="Tue, 12:58 PM",
                 },
                 new ChatListData
                 {
                     ContactName = "Linh",
-                    ContactPhoto = new Uri("/assets/6.jpg",UriKind.RelativeOrAbsolute),
+                    ContactPhoto = new Uri("/assets/3.jpg",UriKind.RelativeOrAbsolute),
                     Message="Hello",
                     LastMessageTime="Tue, 12:58 PM",
                 },
                 new ChatListData
                 {
                     ContactName = "Kiet",
-                    ContactPhoto = new Uri("/assets/6.jpg",UriKind.RelativeOrAbsolute),
+                    ContactPhoto = new Uri("/assets/4.jpg",UriKind.RelativeOrAbsolute),
                     Message="Hello",
                     LastMessageTime="Tue, 12:58 PM",
                 },
                 new ChatListData
                 {
                     ContactName = "Huy",
-                    ContactPhoto = new Uri("/assets/6.jpg",UriKind.RelativeOrAbsolute),
+                    ContactPhoto = new Uri("/assets/5.jpg",UriKind.RelativeOrAbsolute),
                     Message="Hello",
                     LastMessageTime="Tue, 12:58 PM",
                 }
