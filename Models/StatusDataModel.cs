@@ -10,8 +10,9 @@ namespace chatapp.Models
     {
         public string ContactName { get; set; }
         public Uri ContactPhoto { get; set; }
-        public string StatusMessage { get; set; }
         public Uri StatusImage { get; set; }
         public bool IsMeAddSatus { get; set; }
+        //public string StatusMessage { get; set; }
+
     }
 }

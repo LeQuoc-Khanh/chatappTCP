@@ -10,18 +10,39 @@ namespace chatapp.ViewModels
 {
     public class ViewModel
     {
-        ObservableCollection<StatusDataModel> statusThumbsCollection;
-        ViewModel()
+        public ObservableCollection<StatusDataModel> statusThumbsCollection;
+        public ViewModel()
         {
             statusThumbsCollection = new ObservableCollection<StatusDataModel>()
             {
                 new StatusDataModel
                 {
-                    ContactName="",
-                    ContactPhoto="",
-                    StatusImage="",
-                    IsMeAddSatus="",
+                    IsMeAddSatus=true
                 },
+
+                 new StatusDataModel
+                 {
+                    ContactName="Duy",
+                    ContactPhoto=new Uri("/assets/1.png", UriKind.RelativeOrAbsolute),
+                    StatusImage=new Uri("/assets/5.jpg", UriKind.RelativeOrAbsolute),
+                    IsMeAddSatus=false
+                 },
+
+                  new StatusDataModel
+                 {
+                    ContactName="Duy",
+                    ContactPhoto=new Uri("/assets/1.png", UriKind.RelativeOrAbsolute),
+                    StatusImage=new Uri("/assets/5.jpg", UriKind.RelativeOrAbsolute),
+                    IsMeAddSatus=false
+                 },
+
+                   new StatusDataModel
+                 {
+                    ContactName="Duy",
+                    ContactPhoto=new Uri("/assets/1.png", UriKind.RelativeOrAbsolute),
+                    StatusImage=new Uri("/assets/5.jpg", UriKind.RelativeOrAbsolute),
+                    IsMeAddSatus=false
+                 },
             };
         }
     }

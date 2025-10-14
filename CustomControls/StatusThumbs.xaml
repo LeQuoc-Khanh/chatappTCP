@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:chatapp.CustomControls"
+             xmlns:viewmodels="clr-namespace:chatapp.ViewModels"
              mc:Ignorable="d">
     <UserControl.Resources>
         <DataTemplate x:Key="thumbsTemplate">
@@ -36,7 +37,7 @@
                 HorizontalAlignment="Center">
                 </Ellipse>
 
-                    <Path
+                <Path
                     Data="{StaticResource addSign}"
                     Fill="#dce1de"
                     VerticalAlignment="Center"
@@ -64,7 +65,10 @@
             </Grid>
         </DataTemplate>
     </UserControl.Resources>
-    <ItemsControl ItemTemplate="{StaticResource thumbsTemplate}">
+    <ItemsControl ItemTemplate="{StaticResource thumbsTemplate}" ItemsSource="{Binding statusThumbsCollection}">
+        <ItemsControl.DataContext>
+            <viewmodels:ViewModel/>
+        </ItemsControl.DataContext>
         <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
                 <StackPanel Orientation="Horizontal"/>

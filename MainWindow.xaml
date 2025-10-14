@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:chatapp"
+        xmlns:customcontrols="clr-namespace:chatapp.CustomControls"
         mc:Ignorable="d"
         x:Name="mainWindow"
         AllowsTransparency="True"
@@ -149,7 +150,7 @@
                 </Border>
                 
                 <!--Region Status Thumbnails-->
-                
+                <customcontrols:StatusThumbs Grid.Row="2"/>
             </Grid>
         </Grid>
     </Border>
