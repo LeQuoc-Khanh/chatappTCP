@@ -13,16 +13,22 @@
             </Grid>
         </DataTemplate>
     </UserControl.Resources>
-    <Grid Margin="15,0">
+    <Grid Margin="25,15">
         <StackPanel>
+            <!-- Title-->
             <StackPanel Orientation="Horizontal">
-                <Path Data="{StaticResource allchats}"
-                      Style="{StaticResource {x:Type Path}}"/>
+                <Path
+                    Fill="Black"
+                    Data="{StaticResource allchats}"
+                    Style="{StaticResource {x:Type Path}}"/>
                 <TextBlock
+                    Margin="10,0"
                    Text="All Chats"
                    FontWeight="SemiBold"
                    VerticalAlignment="Center"/>
             </StackPanel>
+            
+            <!--Chat List-->
             <ItemsControl
                 ItemsSource="{Binding Chats}"
                 ItemTemplate="{StaticResource ChatButtonItemTemplate}">
