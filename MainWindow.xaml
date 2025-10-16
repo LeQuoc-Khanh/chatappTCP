@@ -155,6 +155,27 @@
 
                 <customcontrols:ChatList Grid.Row="3"/>
             </Grid>
+            <!--#region  Conversation Screen-->
+            <Grid
+                Grid.Column="1"
+                Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <!--Conversation Header-->
+                    <RowDefinition/>
+                    <!--Body-->
+                    <RowDefinition/>
+                    <!--Reply popup-->
+                    <RowDefinition/>
+                    <!--Send Message box-->
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Grid VerticalAlignment="top">
+                    
+                </Grid>
+                
+            </Grid>
+            <!--#endregion-->
         </Grid>
     </Border>
 </Window>
