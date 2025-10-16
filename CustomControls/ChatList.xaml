@@ -147,7 +147,7 @@
             </RadioButton>
         </DataTemplate>
     </UserControl.Resources>
-    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled" >
         <Grid Margin="25,15">
             <StackPanel>
                 <!-- Title-->
