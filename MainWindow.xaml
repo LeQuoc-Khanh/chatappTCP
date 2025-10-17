@@ -251,7 +251,8 @@
                         Style="{StaticResource ToggleIconButtonStyle}"/>
                     
                 </Grid>
-                <!--Conversation Body-->
+                <!--Conversation Messages Body-->
+                <customcontrols:Conversation Grid.Row="1"/>
             </Grid>
             <!--#endregion-->
         </Grid>
