@@ -1,11 +1,11 @@
-﻿<Window x:Class="chatapp.MainWindow"
+﻿<Window x:Class="chatappTCP.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:chatapp"
-        xmlns:customcontrols="clr-namespace:chatapp.CustomControls"
-        xmlns:viewmodels="clr-namespace:chatapp.ViewModels"
+        xmlns:local="clr-namespace:chatappTCP"
+        xmlns:customcontrols="clr-namespace:chatappTCP.CustomControls"
+        xmlns:viewmodels="clr-namespace:chatappTCP.ViewModels"
         mc:Ignorable="d"
         x:Name="mainWindow"
         AllowsTransparency="True"
@@ -199,6 +199,8 @@
                 <customcontrols:StatusThumbs Grid.Row="2"/>
 
                 <customcontrols:ChatList Grid.Row="3"/>
+
+                <customcontrols:Conversation Grid.Row="1"/>
             </Grid>
             <!--#region  Conversation Screen-->
             <Grid
@@ -252,7 +254,7 @@
                     
                 </Grid>
                 <!--Conversation Messages Body-->
-                <customcontrols:Conversation Grid.Row="1"/>
+                
             </Grid>
             <!--#endregion-->
         </Grid>

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace chatapp.Models
+namespace chatappTCP.Models
 {
     public class StatusDataModel
     {

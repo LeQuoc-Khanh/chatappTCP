@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace chatapp.Models
+namespace chatappTCP.Models
 {
     public class ChatListData
     {
