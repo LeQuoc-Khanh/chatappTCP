@@ -31,3 +31,6 @@ packages/
 
 # Publish
 *.Publish.xml
+
+database/*.mdf
+database/*.ldf
