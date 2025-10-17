@@ -12,6 +12,16 @@ namespace chatapp.ViewModels
 {
     public class ViewModel : INotifyPropertyChanged
     {
+        #region MainWindow
+
+        #region Properties
+        public string ContactName { get; set; }
+        public Uri ContactPhoto { get; set; }
+        public string LastSeen { get; set; }
+        #endregion
+
+        #endregion
+
         #region Status Thumbs
         #region Properties
 

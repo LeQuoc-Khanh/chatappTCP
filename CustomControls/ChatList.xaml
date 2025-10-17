@@ -152,10 +152,9 @@
             <StackPanel>
                 <!-- Title-->
                 <StackPanel Orientation="Horizontal">
-                    <Path
+					<Path
                       Fill="Black"
-                      Data="{StaticResource allchats}"
-                      Style="{StaticResource {x:Type Path}}"/>
+                      Data="{StaticResource allchats}"/>
                     <TextBlock
                       Margin="10,0"
                       Text="All Chats"
