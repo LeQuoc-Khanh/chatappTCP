@@ -132,10 +132,24 @@ namespace chatappTCP.ViewModels
         }
         #endregion
         #endregion
+
+        #region Conversations
+        #region Properties
+        public ObservableCollection<ChatConversation> Conversation;
+        #endregion
+
+        #region Logics
+        void LoadChatConversation()
+        {
+             
+        }
+        #endregion
+        #endregion
         public ViewModel()
         {
            LoadStatusThumbs();
-            LoadChats();
+           LoadChats();
+           LoadChatConversation();
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
