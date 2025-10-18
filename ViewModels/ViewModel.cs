@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace chatappTCP.ViewModels
 {
@@ -136,13 +137,35 @@ namespace chatappTCP.ViewModels
 
         #region Conversations
         #region Properties
-        public ObservableCollection<ChatConversation> Conversation;
+        public ObservableCollection<ChatConversation> Conversations;
         #endregion
 
         #region Logics
         void LoadChatConversation()
         {
-             
+             if (connection.State == System.Data.ConnectionState.Closed)
+               connection.Open();
+             using (SqlCommand com = new SqlCommand("select * from conversations where ContactName=Mike",connection))
+             {
+                using (SqlDataReader reader = com.ExecuteReader())
+                { 
+                    while (reader.Read())
+                    {
+                        string MsgReveivedOn = !string.IsNullOrEmpty(reader["MsgReceivedOn"].ToString()) ? Convert.ToDateTime(reader["MsgReceivedOn"].ToString()).ToString("MMM dd, hh:mm tt") : ""; string MsgSentOn = !string.IsNullOrEmpty(reader["MsgSentOn"].ToString()) ? Convert.ToDateTime(reader["MsgSentOn"].ToString()).ToString("MMM dd, hh:mm tt") : "";
+                        var conversation = new ChatConversation()
+                        {
+                            ContactName = reader["ContactName"].ToString(),
+                            ReicevedMessage = reader["ReceivedMsgs"].ToString(),
+                            MsgReceivedOn = reader["MsgReceivedOn"].ToString(),
+                            SentMessage = reader["SentMsgs"].ToString(),
+                            MsgSentOn = reader["MsgSentOn"].ToString(),
+                            IsMessageReceived = string.IsNullOrEmpty(reader["ReceivedMsgs"].ToString()) ? false : true
+                        };
+                        Conversations.Add(conversation);
+                    }
+                }
+             }
+            
         }
         #endregion
         #endregion

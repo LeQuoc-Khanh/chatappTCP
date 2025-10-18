@@ -9,9 +9,9 @@ namespace chatappTCP.Models
     public class ChatConversation
     {
         public string ContactName { get; set; }
-        public String ReicevedMessages { get; set; }
+        public String ReicevedMessage { get; set; }
         public string MsgReceivedOn { get; set; }
-        public string SentMessages { get; set; }
+        public string SentMessage { get; set; }
         public string MsgSentOn { get; set; }
         public bool IsMessageReceived { get; set; }
         public bool MessageContainsReply { get; set; }
