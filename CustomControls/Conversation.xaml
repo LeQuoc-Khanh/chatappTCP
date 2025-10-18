@@ -5,8 +5,20 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:chatappTCP.CustomControls"
              mc:Ignorable="d" 
-             Height="Auto">
+             Height="Auto"
+             Width="Auto">
     <UserControl.Resources>
+        <Style x:Key="MessageTextStyle" TargetType="{x:Type TextBlock}">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="20"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Text" Value="{Binding ReceivedMessage}"/>
+        </Style>
+        
         <Style TargetType="{x:Type Button}">
             <Setter Property="SnapsToDevicePixels" Value="True"/>
             <Setter Property="Height" Value="Auto"/>
@@ -27,6 +39,37 @@
                             Padding="{TemplateBinding Padding}"
                             SnapsToDevicePixels="True"
                             x:Name="border">
+                            
+                            <!--Message Bubble-->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Border
+                                    Height="Auto"
+                                    HorizontalAlignment="Right"
+                                    MinHeight="60"
+                                    Width="Auto"
+                                    VerticalAlignment="Center">
+                                    <Border.Style>
+                                        <Style TargetType="{x:Type Border}">
+                                            <Setter Property="CornerRadius" Value="30,30,30,0"/>
+                                            <Setter Property="Background" Value="#dce1de"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsReceived}" Value="False">
+                                                    <Setter Property="CornerRadius" Value="30,30,0,30"/>
+                                                    <Setter Property="Background" Value="#49a078"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                </Border>
+                                <DockPanel
+                                    MaxHeight="700">
+                                    <TextBlock Style="{StaticResource MessageTextStyle}"/>
+                                </DockPanel>
+                            </Grid>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>

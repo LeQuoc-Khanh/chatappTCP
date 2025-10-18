@@ -7,7 +7,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace chatappTCP.ViewModels
@@ -41,7 +40,7 @@ namespace chatappTCP.ViewModels
 
                  new StatusDataModel
                  {
-                    ContactName="Khanh",
+                    ContactName="Mike",
                     ContactPhoto=new Uri("/assets/ok.png", UriKind.RelativeOrAbsolute),
                     StatusImage=new Uri("/assets/6.jpg", UriKind.RelativeOrAbsolute),
                     IsMeAddStatus=false
@@ -49,7 +48,7 @@ namespace chatappTCP.ViewModels
 
                  new StatusDataModel
                  {
-                    ContactName="Khoa",
+                    ContactName="Steve",
                     ContactPhoto=new Uri("/assets/ok.png", UriKind.RelativeOrAbsolute),
                     StatusImage=new Uri("/assets/2.jpg", UriKind.RelativeOrAbsolute),
                     IsMeAddStatus=false
@@ -57,25 +56,12 @@ namespace chatappTCP.ViewModels
 
                  new StatusDataModel
                  {
-                    ContactName="Linh",
+                    ContactName="Will",
                     ContactPhoto=new Uri("/assets/ok.png", UriKind.RelativeOrAbsolute),
                     StatusImage=new Uri("/assets/3.jpg", UriKind.RelativeOrAbsolute),
                     IsMeAddStatus=false
                  },
-                 new StatusDataModel
-                 {
-                    ContactName="Kiet",
-                    ContactPhoto=new Uri("/assets/ok.png", UriKind.RelativeOrAbsolute),
-                    StatusImage=new Uri("/assets/4.jpg", UriKind.RelativeOrAbsolute),
-                    IsMeAddStatus=false
-                 },
-                 new StatusDataModel
-                 {
-                    ContactName="Huy",
-                    ContactPhoto=new Uri("/assets/ok.png", UriKind.RelativeOrAbsolute),
-                    StatusImage=new Uri("/assets/5.jpg", UriKind.RelativeOrAbsolute),
-                    IsMeAddStatus=false
-                 },
+                 
             };
             OnPropertyChanged("statusThumbsCollection");
         }
@@ -95,7 +81,7 @@ namespace chatappTCP.ViewModels
             {
                 new ChatListData
                 {
-                    ContactName = "Khanh",
+                    ContactName = "Mike",
                     ContactPhoto = new Uri("/assets/6.jpg",UriKind.RelativeOrAbsolute),
                     Message="Hello",
                     LastMessageTime="Tue, 12:58 PM",
@@ -103,32 +89,25 @@ namespace chatappTCP.ViewModels
                 },
                 new ChatListData
                 {
-                    ContactName = "Khoa",
+                    ContactName = "Steve",
                     ContactPhoto = new Uri("/assets/2.jpg",UriKind.RelativeOrAbsolute),
                     Message="Hello",
                     LastMessageTime="Tue, 12:58 PM",
                 },
                 new ChatListData
                 {
-                    ContactName = "Linh",
+                    ContactName = "Will",
                     ContactPhoto = new Uri("/assets/3.jpg",UriKind.RelativeOrAbsolute),
                     Message="Hello",
                     LastMessageTime="Tue, 12:58 PM",
                 },
                 new ChatListData
                 {
-                    ContactName = "Kiet",
+                    ContactName = "John",
                     ContactPhoto = new Uri("/assets/4.jpg",UriKind.RelativeOrAbsolute),
                     Message="Hello",
                     LastMessageTime="Tue, 12:58 PM",
                 },
-                new ChatListData
-                {
-                    ContactName = "Huy",
-                    ContactPhoto = new Uri("/assets/5.jpg",UriKind.RelativeOrAbsolute),
-                    Message="Hello",
-                    LastMessageTime="Tue, 12:58 PM",
-                }
             };
             OnPropertyChanged();
         }
@@ -143,34 +122,11 @@ namespace chatappTCP.ViewModels
         #region Logics
         void LoadChatConversation()
         {
-             if (connection.State == System.Data.ConnectionState.Closed)
-               connection.Open();
-             using (SqlCommand com = new SqlCommand("select * from conversations where ContactName=Mike",connection))
-             {
-                using (SqlDataReader reader = com.ExecuteReader())
-                { 
-                    while (reader.Read())
-                    {
-                        string MsgReveivedOn = !string.IsNullOrEmpty(reader["MsgReceivedOn"].ToString()) ? Convert.ToDateTime(reader["MsgReceivedOn"].ToString()).ToString("MMM dd, hh:mm tt") : ""; string MsgSentOn = !string.IsNullOrEmpty(reader["MsgSentOn"].ToString()) ? Convert.ToDateTime(reader["MsgSentOn"].ToString()).ToString("MMM dd, hh:mm tt") : "";
-                        var conversation = new ChatConversation()
-                        {
-                            ContactName = reader["ContactName"].ToString(),
-                            ReicevedMessage = reader["ReceivedMsgs"].ToString(),
-                            MsgReceivedOn = reader["MsgReceivedOn"].ToString(),
-                            SentMessage = reader["SentMsgs"].ToString(),
-                            MsgSentOn = reader["MsgSentOn"].ToString(),
-                            IsMessageReceived = string.IsNullOrEmpty(reader["ReceivedMsgs"].ToString()) ? false : true
-                        };
-                        Conversations.Add(conversation);
-                    }
-                }
-             }
             
         }
         #endregion
         #endregion
 
-        SqlConnection connection = new SqlConnection(@"Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\\Database1.mdf;Integrated Security=True");
         public ViewModel()
         {
            LoadStatusThumbs();

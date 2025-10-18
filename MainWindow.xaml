@@ -200,7 +200,6 @@
 
                 <customcontrols:ChatList Grid.Row="3"/>
 
-                <customcontrols:Conversation Grid.Row="1"/>
             </Grid>
             <!--#region  Conversation Screen-->
             <Grid
@@ -254,7 +253,8 @@
                     
                 </Grid>
                 <!--Conversation Messages Body-->
-                
+                <customcontrols:Conversation Grid.Row="1"/>
+
             </Grid>
             <!--#endregion-->
         </Grid>
