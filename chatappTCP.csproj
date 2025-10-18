@@ -18,7 +18,6 @@
     <None Remove="assets\7.png" />
     <None Remove="assets\8.jpg" />
     <None Remove="assets\connectedworld.png" />
-    <None Remove="assets\Database1.mdf" />
     <None Remove="assets\Media\1.png" />
     <None Remove="assets\Media\2.jpg" />
     <None Remove="assets\Media\3.jpg" />
@@ -28,7 +27,6 @@
     <None Remove="assets\Media\7.png" />
     <None Remove="assets\Media\8.jpg" />
     <None Remove="assets\ok.png" />
-    <None Remove="database\Database1.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -63,9 +61,6 @@
     <Content Include="assets\connectedworld.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="assets\Database1.mdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="assets\icons.xaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -95,9 +90,6 @@
     </Content>
     <Content Include="assets\ok.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="database\Database1.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
