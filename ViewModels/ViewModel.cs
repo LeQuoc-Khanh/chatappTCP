@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 
 namespace chatappTCP.ViewModels
 {
@@ -145,6 +146,8 @@ namespace chatappTCP.ViewModels
         }
         #endregion
         #endregion
+
+        SqlConnection connection = new SqlConnection(@"Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\\Database1.mdf;Integrated Security=True");
         public ViewModel()
         {
            LoadStatusThumbs();

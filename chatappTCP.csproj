@@ -28,6 +28,7 @@
     <None Remove="assets\Media\7.png" />
     <None Remove="assets\Media\8.jpg" />
     <None Remove="assets\ok.png" />
+    <None Remove="database\Database1.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -95,6 +96,13 @@
     <Content Include="assets\ok.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="database\Database1.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.2" />
   </ItemGroup>
 
 </Project>
