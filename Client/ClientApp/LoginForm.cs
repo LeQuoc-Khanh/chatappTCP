@@ -10,11 +10,18 @@ using System.Windows.Forms;
 
 namespace ClientApp
 {
-    public partial class Login : Form
+    public partial class LoginForm : Form
     {
-        public Login()
+        public LoginForm()
         {
             InitializeComponent();
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+            RegisterForm register = new RegisterForm();
+            register.Show();
+            this.Hide(); // ẩn LoginForm
         }
     }
 }
