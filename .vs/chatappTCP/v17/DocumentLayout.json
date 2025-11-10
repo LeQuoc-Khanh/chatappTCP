@@ -7,11 +7,11 @@
       "RelativeMoniker": "D:0:0:{D04455EC-6E97-47B9-975E-748AC4133866}|ChatappServer\\ChatappServer.csproj|solutionrelative:chatappserver\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D04455EC-6E97-47B9-975E-748AC4133866}|ChatappServer\\ChatappServer.csproj|c:\\users\\khanh\\onedrive\\documents\\github\\chatapptcp\\chatappserver\\form1.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{D04455EC-6E97-47B9-975E-748AC4133866}|ChatappServer\\ChatappServer.csproj|C:\\Users\\khanh\\OneDrive\\Documents\\GitHub\\chatappTCP\\chatappserver\\form1.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D04455EC-6E97-47B9-975E-748AC4133866}|ChatappServer\\ChatappServer.csproj|solutionrelative:chatappserver\\form1.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{7AFE6135-3511-449D-9A98-F5CC51B79E9A}|ChatappClient\\ChatappClient.csproj|c:\\users\\khanh\\onedrive\\documents\\github\\chatapptcp\\chatappclient\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "AbsoluteMoniker": "D:0:0:{7AFE6135-3511-449D-9A98-F5CC51B79E9A}|ChatappClient\\ChatappClient.csproj|C:\\Users\\khanh\\OneDrive\\Documents\\GitHub\\chatappTCP\\chatappclient\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{7AFE6135-3511-449D-9A98-F5CC51B79E9A}|ChatappClient\\ChatappClient.csproj|solutionrelative:chatappclient\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     }
   ],
@@ -50,8 +50,7 @@
               "ToolTip": "C:\\Users\\khanh\\OneDrive\\Documents\\GitHub\\chatappTCP\\ChatappClient\\Form1.cs [Design]",
               "RelativeToolTip": "ChatappClient\\Form1.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-10T06:48:13.946Z",
-              "EditorCaption": " [Design]"
+              "WhenOpened": "2025-11-10T06:48:13.946Z"
             },
             {
               "$type": "Document",
