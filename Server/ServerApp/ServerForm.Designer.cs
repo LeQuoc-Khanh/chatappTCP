@@ -33,13 +33,13 @@
             txtIP = new TextBox();
             txtPort = new TextBox();
             dataGridView1 = new DataGridView();
+            ColName = new DataGridViewTextBoxColumn();
+            ColKick = new DataGridViewButtonColumn();
             btnServer = new Button();
             txtLog = new TextBox();
             txtBroadcast = new TextBox();
             btnSendBroadcast = new Button();
             DisAll = new Button();
-            ColName = new DataGridViewTextBoxColumn();
-            ColKick = new DataGridViewButtonColumn();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -85,6 +85,21 @@
             dataGridView1.Size = new Size(236, 606);
             dataGridView1.TabIndex = 4;
             // 
+            // ColName
+            // 
+            ColName.HeaderText = "Name";
+            ColName.MinimumWidth = 6;
+            ColName.Name = "ColName";
+            ColName.ReadOnly = true;
+            ColName.Width = 125;
+            // 
+            // ColKick
+            // 
+            ColKick.HeaderText = "Disconnect";
+            ColKick.MinimumWidth = 6;
+            ColKick.Name = "ColKick";
+            ColKick.Width = 125;
+            // 
             // btnServer
             // 
             btnServer.Location = new Point(12, 46);
@@ -128,19 +143,6 @@
             DisAll.TabIndex = 9;
             DisAll.Text = "Disconnect All";
             DisAll.UseVisualStyleBackColor = true;
-            // 
-            // ColName
-            // 
-            ColName.HeaderText = "Name";
-            ColName.MinimumWidth = 6;
-            ColName.Name = "ColName";
-            ColName.ReadOnly = true;
-            // 
-            // ColKick
-            // 
-            ColKick.HeaderText = "Disconnect";
-            ColKick.MinimumWidth = 6;
-            ColKick.Name = "ColKick";
             // 
             // ServerForm
             // 
