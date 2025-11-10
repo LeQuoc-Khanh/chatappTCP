@@ -1,6 +1,6 @@
 ﻿namespace chatappTCP
 {
-    partial class Form2
+    partial class ClientForm
     {
         /// <summary>
         /// Required designer variable.

@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace chatappTCP
 {
-    public partial class Form2 : Form
+    public partial class ClientForm : Form
     {
-        public Form2()
+        public ClientForm()
         {
             InitializeComponent();
         }
