@@ -140,8 +140,9 @@
             txtLog.ScrollBars = ScrollBars.Vertical;
             txtLog.Size = new Size(992, 529);
             txtLog.TabIndex = 14;
+            txtLog.TextChanged += txtLog_TextChanged;
             // 
-            // Form2
+            // ClientForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -160,8 +161,8 @@
             Controls.Add(txtIP);
             Controls.Add(UserDis);
             MaximizeBox = false;
-            Name = "Form2";
-            Text = "Form2";
+            Name = "ClientForm";
+            Text = "Client";
             ResumeLayout(false);
             PerformLayout();
         }

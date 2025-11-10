@@ -16,5 +16,10 @@ namespace chatappTCP
         {
             InitializeComponent();
         }
+
+        private void txtLog_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
