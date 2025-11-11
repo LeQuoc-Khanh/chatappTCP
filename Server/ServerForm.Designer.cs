@@ -151,7 +151,7 @@
             Controls.Add(lstClients);
             Controls.Add(txtLog);
             Name = "ServerForm";
-            Text = "Form1";
+            Text = "Server";
             ResumeLayout(false);
             PerformLayout();
         }
