@@ -42,10 +42,18 @@
             // 
             // txtLog
             // 
-            txtLog.Location = new Point(12, 402);
+            txtLog.BackColor = SystemColors.Window;
+            txtLog.Cursor = Cursors.IBeam;
+            txtLog.Font = new Font("Microsoft Sans Serif", 7.8F);
+            txtLog.Location = new Point(13, 100);
+            txtLog.Margin = new Padding(4);
+            txtLog.Multiline = true;
             txtLog.Name = "txtLog";
-            txtLog.Size = new Size(592, 27);
-            txtLog.TabIndex = 0;
+            txtLog.ReadOnly = true;
+            txtLog.ScrollBars = ScrollBars.Vertical;
+            txtLog.Size = new Size(568, 303);
+            txtLog.TabIndex = 30;
+            txtLog.TabStop = false;
             // 
             // lstClients
             // 
@@ -58,7 +66,7 @@
             // lblStatus
             // 
             lblStatus.AutoSize = true;
-            lblStatus.Location = new Point(12, 105);
+            lblStatus.Location = new Point(112, 16);
             lblStatus.Name = "lblStatus";
             lblStatus.Size = new Size(50, 20);
             lblStatus.TabIndex = 2;
@@ -66,7 +74,7 @@
             // 
             // BtnStart
             // 
-            BtnStart.Location = new Point(12, 64);
+            BtnStart.Location = new Point(12, 12);
             BtnStart.Name = "BtnStart";
             BtnStart.Size = new Size(94, 29);
             BtnStart.TabIndex = 3;
@@ -76,7 +84,7 @@
             // 
             // BtnStop
             // 
-            BtnStop.Location = new Point(112, 64);
+            BtnStop.Location = new Point(12, 47);
             BtnStop.Name = "BtnStop";
             BtnStop.Size = new Size(94, 29);
             BtnStop.TabIndex = 4;
