@@ -32,6 +32,7 @@ namespace Server
         private Task send = null;
         private Thread disconnect = null;
         private bool exit = false;
+        private TcpClient tcpClient;
 
         public Server()
         {
@@ -633,6 +634,7 @@ namespace Server
             // Hiển thị thông báo khi nhận tệp tin
             Log($"File received: {filePath}");
         }
+
 
 
 
