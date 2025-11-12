@@ -31,10 +31,10 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Client));
             addrTextBox = new TextBox();
             portTextBox = new TextBox();
-            textBox3 = new TextBox();
+            usernameTextBox = new TextBox();
             keyTextBox = new TextBox();
             logTextBox = new TextBox();
-            sendTextButton = new TextBox();
+            sendTextBox = new TextBox();
             connectButton = new Button();
             clearButton = new Button();
             localaddrLabel = new Label();
@@ -59,10 +59,10 @@
             portTextBox.Name = "portTextBox";
             portTextBox.TabStop = false;
             // 
-            // textBox3
+            // usernameTextBox
             // 
-            resources.ApplyResources(textBox3, "textBox3");
-            textBox3.Name = "textBox3";
+            resources.ApplyResources(usernameTextBox, "usernameTextBox");
+            usernameTextBox.Name = "usernameTextBox";
             // 
             // keyTextBox
             // 
@@ -79,12 +79,12 @@
             logTextBox.ReadOnly = true;
             logTextBox.TabStop = false;
             // 
-            // sendTextButton
+            // sendTextBox
             // 
-            sendTextButton.Cursor = Cursors.IBeam;
-            resources.ApplyResources(sendTextButton, "sendTextButton");
-            sendTextButton.Name = "sendTextButton";
-            sendTextButton.TabStop = false;
+            sendTextBox.Cursor = Cursors.IBeam;
+            resources.ApplyResources(sendTextBox, "sendTextBox");
+            sendTextBox.Name = "sendTextBox";
+            sendTextBox.TabStop = false;
             // 
             // connectButton
             // 
@@ -92,6 +92,7 @@
             connectButton.Name = "connectButton";
             connectButton.TabStop = false;
             connectButton.UseVisualStyleBackColor = true;
+            connectButton.Click += connectButton_Click;
             // 
             // clearButton
             // 
@@ -99,6 +100,7 @@
             clearButton.Name = "clearButton";
             clearButton.TabStop = false;
             clearButton.UseVisualStyleBackColor = true;
+            clearButton.Click += clearButton_Click;
             // 
             // localaddrLabel
             // 
@@ -143,16 +145,17 @@
             Controls.Add(localaddrLabel);
             Controls.Add(clearButton);
             Controls.Add(connectButton);
-            Controls.Add(sendTextButton);
+            Controls.Add(sendTextBox);
             Controls.Add(logTextBox);
             Controls.Add(keyTextBox);
-            Controls.Add(textBox3);
+            Controls.Add(usernameTextBox);
             Controls.Add(portTextBox);
             Controls.Add(addrTextBox);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             Name = "Client";
             ShowIcon = false;
+            Load += Client_Load;
             ResumeLayout(false);
             PerformLayout();
         }
@@ -161,10 +164,10 @@
 
         private TextBox addrTextBox;
         private TextBox portTextBox;
-        private TextBox textBox3;
+        private TextBox usernameTextBox;
         private TextBox keyTextBox;
         private TextBox logTextBox;
-        private TextBox sendTextButton;
+        private TextBox sendTextBox;
         private Button connectButton;
         private Button clearButton;
         private Label localaddrLabel;

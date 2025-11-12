@@ -189,25 +189,31 @@
   <data name="&gt;&gt;portTextBox.ZOrder" xml:space="preserve">
     <value>12</value>
   </data>
-  <data name="textBox3.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="usernameTextBox.Location" type="System.Drawing.Point, System.Drawing">
     <value>477, 61</value>
   </data>
-  <data name="textBox3.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="usernameTextBox.Size" type="System.Drawing.Size, System.Drawing">
     <value>125, 27</value>
   </data>
-  <data name="textBox3.TabIndex" type="System.Int32, mscorlib">
+  <data name="usernameTextBox.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
   </data>
-  <data name="&gt;&gt;textBox3.Name" xml:space="preserve">
-    <value>textBox3</value>
+  <data name="usernameTextBox.Text" xml:space="preserve">
+    <value>Client</value>
   </data>
-  <data name="&gt;&gt;textBox3.Type" xml:space="preserve">
+  <data name="usernameTextBox.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Center</value>
+  </data>
+  <data name="&gt;&gt;usernameTextBox.Name" xml:space="preserve">
+    <value>usernameTextBox</value>
+  </data>
+  <data name="&gt;&gt;usernameTextBox.Type" xml:space="preserve">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;textBox3.Parent" xml:space="preserve">
+  <data name="&gt;&gt;usernameTextBox.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="&gt;&gt;textBox3.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;usernameTextBox.ZOrder" xml:space="preserve">
     <value>11</value>
   </data>
   <metadata name="keyTextBox.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -270,31 +276,31 @@
   <data name="&gt;&gt;logTextBox.ZOrder" xml:space="preserve">
     <value>9</value>
   </data>
-  <metadata name="sendTextButton.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <metadata name="sendTextBox.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
-  <data name="sendTextButton.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="sendTextBox.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 561</value>
   </data>
-  <data name="sendTextButton.ScrollBars" type="System.Windows.Forms.ScrollBars, System.Windows.Forms">
+  <data name="sendTextBox.ScrollBars" type="System.Windows.Forms.ScrollBars, System.Windows.Forms">
     <value>Vertical</value>
   </data>
-  <data name="sendTextButton.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="sendTextBox.Size" type="System.Drawing.Size, System.Drawing">
     <value>819, 27</value>
   </data>
-  <data name="sendTextButton.TabIndex" type="System.Int32, mscorlib">
+  <data name="sendTextBox.TabIndex" type="System.Int32, mscorlib">
     <value>5</value>
   </data>
-  <data name="&gt;&gt;sendTextButton.Name" xml:space="preserve">
-    <value>sendTextButton</value>
+  <data name="&gt;&gt;sendTextBox.Name" xml:space="preserve">
+    <value>sendTextBox</value>
   </data>
-  <data name="&gt;&gt;sendTextButton.Type" xml:space="preserve">
+  <data name="&gt;&gt;sendTextBox.Type" xml:space="preserve">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;sendTextButton.Parent" xml:space="preserve">
+  <data name="&gt;&gt;sendTextBox.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="&gt;&gt;sendTextButton.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;sendTextBox.ZOrder" xml:space="preserve">
     <value>8</value>
   </data>
   <metadata name="connectButton.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
