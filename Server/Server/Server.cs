@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -586,5 +588,53 @@ namespace Server
         {
 
         }
+        private void BtnSendFile_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "All Files|*.*|Image Files|*.jpg;*.jpeg;*.png;*.gif|Text Files|*.txt";
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string filePath = openFileDialog.FileName;
+                SendFile(filePath);
+            }
+        }
+
+        // Phương thức gửi tệp
+        private void SendFile(string filePath)
+        {
+            FileInfo fileInfo = new FileInfo(filePath);
+            byte[] fileData = File.ReadAllBytes(filePath);
+
+            // Gửi thông tin tệp tin (tên và kích thước) trước tiên
+            string fileName = fileInfo.Name;
+            long fileLength = fileInfo.Length;
+
+            NetworkStream stream = tcpClient.GetStream();
+            BinaryWriter writer = new BinaryWriter(stream);
+
+            writer.Write(fileName);  // Gửi tên tệp
+            writer.Write(fileLength);  // Gửi kích thước tệp
+
+            // Gửi nội dung tệp tin
+            writer.Write(fileData);
+            writer.Flush();
+
+            // Log thông tin về việc gửi tệp
+            logTextBox.AppendText($"Sending file: {fileName}\n");
+        }
+        private void ReceiveFile(MyClient client, string filePath)
+        {
+            using (BinaryWriter writer = new BinaryWriter(File.Open(filePath, FileMode.Create)))
+            {
+                writer.Write(client.buffer, 0, client.buffer.Length);
+            }
+
+            // Hiển thị thông báo khi nhận tệp tin
+            Log($"File received: {filePath}");
+        }
+
+
+
     }
 }
