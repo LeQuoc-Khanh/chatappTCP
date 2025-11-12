@@ -44,6 +44,8 @@
             this.addrTextBox = new System.Windows.Forms.TextBox();
             this.versionLabel = new System.Windows.Forms.Label();
             this.checkBox = new System.Windows.Forms.CheckBox();
+            this.chatPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.btnSend = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // connectButton
@@ -109,7 +111,7 @@
             this.logTextBox.Name = "logTextBox";
             this.logTextBox.ReadOnly = true;
             this.logTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.logTextBox.Size = new System.Drawing.Size(568, 301);
+            this.logTextBox.Size = new System.Drawing.Size(568, 68);
             this.logTextBox.TabIndex = 30;
             this.logTextBox.TabStop = false;
             // 
@@ -224,10 +226,36 @@
             this.checkBox.UseVisualStyleBackColor = true;
             this.checkBox.CheckedChanged += new System.EventHandler(this.CheckBox_CheckedChanged);
             // 
+            // chatPanel
+            // 
+            this.chatPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.chatPanel.AutoScroll = true;
+            this.chatPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.chatPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.chatPanel.Location = new System.Drawing.Point(13, 220);
+            this.chatPanel.Name = "chatPanel";
+            this.chatPanel.Size = new System.Drawing.Size(568, 220);
+            this.chatPanel.TabIndex = 42;
+            this.chatPanel.WrapContents = false;
+            // 
+            // btnSend
+            // 
+            this.btnSend.Location = new System.Drawing.Point(49, 442);
+            this.btnSend.Name = "btnSend";
+            this.btnSend.Size = new System.Drawing.Size(68, 22);
+            this.btnSend.TabIndex = 43;
+            this.btnSend.Text = "Attach";
+            this.btnSend.UseVisualStyleBackColor = true;
+            this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
+            // 
             // Client
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(594, 501);
+            this.Controls.Add(this.btnSend);
+            this.Controls.Add(this.chatPanel);
             this.Controls.Add(this.checkBox);
             this.Controls.Add(this.versionLabel);
             this.Controls.Add(this.addrTextBox);
@@ -275,6 +303,8 @@
         private System.Windows.Forms.TextBox addrTextBox;
         private System.Windows.Forms.Label versionLabel;
         private System.Windows.Forms.CheckBox checkBox;
+        private System.Windows.Forms.FlowLayoutPanel chatPanel;
+        private System.Windows.Forms.Button btnSend;
     }
 }
 
