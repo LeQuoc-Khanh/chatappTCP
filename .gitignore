@@ -1,0 +1,13 @@
+# Visual Studio cache
+.vs/
+bin/
+obj/
+*.user
+*.suo
+*.log
+*.pdb
+*.ilk
+*.iobj
+*.ipdb
+*.cache
+*.opendb
