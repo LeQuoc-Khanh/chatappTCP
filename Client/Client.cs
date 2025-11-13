@@ -287,7 +287,8 @@ namespace Client
                 {
                     try
                     {
-                        ip = Dns.GetHostEntry(address).AddressList[0];
+                        ip = Dns.GetHostAddresses(address)
+                        .First(a => a.AddressFamily == AddressFamily.InterNetwork);
                     }
                     catch
                     {
