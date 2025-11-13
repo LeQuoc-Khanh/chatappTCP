@@ -1,1 +1,2 @@
-* text=auto eol=crlf  # Thiết lập kết thúc dòng là CR LF cho tất cả các file
+* text=auto
+*.cs text eol=crlf

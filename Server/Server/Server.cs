@@ -199,17 +199,50 @@ namespace Server
                     else
                     {
                         JavaScriptSerializer json = new JavaScriptSerializer(); // feel free to use JSON serializer
+                        JavaScriptSerializer json = new JavaScriptSerializer();
                         Dictionary<string, string> data = json.Deserialize<Dictionary<string, string>>(obj.data.ToString());
-                        if (!data.ContainsKey("username") || data["username"].Length < 1 || !data.ContainsKey("key") || !data["key"].Equals(keyTextBox.Text))
+
+                        string action = data.ContainsKey("action") ? data["action"] : "";
+
+                        string reply = "";
+
+                        if (action == "login")
                         {
-                            obj.client.Close();
+                            string user = data["username"];
+                            string pass = data["password"];
+
+                            if (Database.CheckLogin(user, pass))
+                            {
+                                obj.username.Append(user);
+                                reply = "{\"status\": \"LOGIN_SUCCESS\"}";
+                            }
+                            else
+                            {
+                                reply = "{\"status\": \"LOGIN_FAIL\"}";
+                                obj.client.Close();
+                            }
+                        }
+                        else if (action == "register")
+                        {
+                            string user = data["username"];
+                            string pass = data["password"];
+                            string email = data["email"];
+
+                            if (Database.Register(user, pass, email))
+                                reply = "{\"status\": \"REGISTER_SUCCESS\"}";
+                            else
+                                reply = "{\"status\": \"REGISTER_FAIL\"}";
                         }
                         else
                         {
-                            obj.username.Append(data["username"].Length > 200 ? data["username"].Substring(0, 200) : data["username"]);
-                            Send("{\"status\": \"authorized\"}", obj);
+                            reply = "{\"status\": \"UNKNOWN_ACTION\"}";
                         }
+
+                        Send(reply, obj);
                         obj.data.Clear();
+                        obj.handle.Set();
+                    }
+                    obj.data.Clear();
                         obj.handle.Set();
                     }
                 }
