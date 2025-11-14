@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -30,6 +32,7 @@ namespace Server
         private Task send = null;
         private Thread disconnect = null;
         private bool exit = false;
+        private TcpClient tcpClient;
 
         public Server()
         {
@@ -254,6 +257,7 @@ namespace Server
         {
             if (Authorize(obj))
             {
+                tcpClient = obj.client;
                 clients.TryAdd(obj.id, obj);
                 AddToGrid(obj.id, obj.username.ToString());
                 string msg = string.Format("{0} has connected", obj.username);
@@ -486,6 +490,37 @@ namespace Server
                 }
             }
         }
+        private void ClientsDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0 && e.ColumnIndex == clientsDataGridView.Columns["dc"].Index)
+            {
+                long.TryParse(clientsDataGridView.Rows[e.RowIndex].Cells["identifier"].Value.ToString(), out long id);
+                Disconnect(id);
+            }
+            if (e.RowIndex >= 0 && e.ColumnIndex == clientsDataGridView.Columns["Message"].Index)
+            {
+                long clientId = Convert.ToInt64(clientsDataGridView.Rows[e.RowIndex].Cells["identifier"].Value);
+                using (Message messageForm = new Message(clientId))
+                {
+                    if (messageForm.ShowDialog() == DialogResult.OK)
+                    {
+                        string message = messageForm.MessageText;
+                        SendMessageToClient(message, clientId);
+                    }
+                }
+            }
+        }
+        // Phương thức gửi tin nhắn cho client
+        private void SendMessageToClient(string message, long clientId)
+        {
+            if (clients.TryGetValue(clientId, out MyClient client))
+            {
+                byte[] buffer = Encoding.UTF8.GetBytes(message);
+                client.stream.BeginWrite(buffer, 0, buffer.Length, new AsyncCallback(Write), client);
+                string logMessage = $"Server (You): Gửi tin nhắn đến {client.username}: {message}";
+                Log(logMessage);
+            }
+        }
 
         private void Disconnect(long id = -1) // disconnect everyone if ID is not supplied or is lesser than zero
         {
@@ -527,15 +562,6 @@ namespace Server
             Disconnect();
         }
 
-        private void ClientsDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex >= 0 && e.ColumnIndex == clientsDataGridView.Columns["dc"].Index)
-            {
-                long.TryParse(clientsDataGridView.Rows[e.RowIndex].Cells["identifier"].Value.ToString(), out long id);
-                Disconnect(id);
-            }
-        }
-
         private void ClearButton_Click(object sender, EventArgs e)
         {
             Log();
@@ -551,6 +577,11 @@ namespace Server
             {
                 keyTextBox.PasswordChar = '*';
             }
+        }
+
+        private void clientsDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }
