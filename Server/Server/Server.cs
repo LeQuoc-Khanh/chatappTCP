@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -30,28 +34,47 @@ namespace Server
         private Task send = null;
         private Thread disconnect = null;
         private bool exit = false;
+        private TcpClient tcpClient;
 
         public Server()
         {
             InitializeComponent();
+            ClockTimer_Tick(this, EventArgs.Empty);
         }
 
-        private void Log(string msg = "") // clear the log if message is not supplied or is empty
+        private void Log(string msg)
         {
-            if (!exit)
+            if (exit || string.IsNullOrWhiteSpace(msg))
             {
-                logTextBox.Invoke((MethodInvoker)delegate
-                {
-                    if (msg.Length > 0)
-                    {
-                        logTextBox.AppendText(string.Format("[ {0} ] {1}{2}", DateTime.Now.ToString("HH:mm"), msg, Environment.NewLine));
-                    }
-                    else
-                    {
-                        logTextBox.Clear();
-                    }
-                });
+                return;
             }
+
+            chatPanel.Invoke((MethodInvoker)delegate
+            {
+                Color color = SystemColors.ControlText;
+                if (msg.StartsWith("ERROR"))
+                {
+                    color = Color.Firebrick;
+                }
+                else if (msg.StartsWith("SYSTEM"))
+                {
+                    color = Color.SteelBlue;
+                }
+
+                int maxWidth = Math.Max(50, chatPanel.ClientSize.Width - 25);
+
+                Label logEntry = new Label
+                {
+                    AutoSize = true,
+                    MaximumSize = new Size(maxWidth, 0),
+                    ForeColor = color,
+                    Text = string.Format("[ {0} ] {1}", DateTime.Now.ToString("HH:mm:ss"), msg),
+                    Margin = new Padding(0, 0, 0, 4)
+                };
+
+                chatPanel.Controls.Add(logEntry);
+                chatPanel.ScrollControlIntoView(logEntry);
+            });
         }
 
         private string ErrorMsg(string msg)
@@ -129,32 +152,55 @@ namespace Server
         {
             MyClient obj = (MyClient)result.AsyncState;
             int bytes = 0;
+
             if (obj.client.Connected)
             {
-                try
-                {
-                    bytes = obj.stream.EndRead(result);
-                }
-                catch (Exception ex)
-                {
-                    Log(ErrorMsg(ex.Message));
-                }
+                try { bytes = obj.stream.EndRead(result); }
+                catch (Exception ex) { Log(ErrorMsg(ex.Message)); }
             }
+
             if (bytes > 0)
             {
-                obj.data.AppendFormat("{0}", Encoding.UTF8.GetString(obj.buffer, 0, bytes));
+                obj.data.Append(Encoding.UTF8.GetString(obj.buffer, 0, bytes));
+
                 try
                 {
                     if (obj.stream.DataAvailable)
                     {
-                        obj.stream.BeginRead(obj.buffer, 0, obj.buffer.Length, new AsyncCallback(Read), obj);
+                        obj.stream.BeginRead(obj.buffer, 0, obj.buffer.Length, Read, obj);
                     }
                     else
                     {
-                        string msg = string.Format("{0}: {1}", obj.username, obj.data);
-                        Log(msg);
-                        Send(msg, obj.id);
+                        string rawMsg = obj.data.ToString();   // Tin nhắn gốc từ client
                         obj.data.Clear();
+
+                        //------------------------------------------------------
+                        // 🔥 KIỂM TRA LOẠI TIN NHẮN ĐỂ SERVER HIỂN BÌNH THƯỜNG
+                        //------------------------------------------------------
+                        string logMsg;
+
+                        if (rawMsg.StartsWith("[IMAGE]"))
+                        {
+                            logMsg = $"{obj.username} sent an image.";
+                            DisplayAttachment(rawMsg);
+                        }
+                        else if (rawMsg.StartsWith("[FILE]"))
+                        {
+                            logMsg = $"{obj.username} sent a file.";
+                            DisplayAttachment(rawMsg);
+                        }
+                        else
+                        {
+                            logMsg = $"{obj.username}: {rawMsg}";
+                        }
+
+                        Log(logMsg);  // Server chỉ log thông báo sạch sẽ
+
+                        //------------------------------------------------------
+                        // 🔥 GỬI NGUYÊN BẢN (Base64 / File bytes / Text) CHO CLIENT
+                        //------------------------------------------------------
+                        Send(rawMsg, obj.id);
+
                         obj.handle.Set();
                     }
                 }
@@ -171,6 +217,8 @@ namespace Server
                 obj.handle.Set();
             }
         }
+
+
 
         private void ReadAuth(IAsyncResult result)
         {
@@ -199,50 +247,17 @@ namespace Server
                     else
                     {
                         JavaScriptSerializer json = new JavaScriptSerializer(); // feel free to use JSON serializer
-                        JavaScriptSerializer json = new JavaScriptSerializer();
                         Dictionary<string, string> data = json.Deserialize<Dictionary<string, string>>(obj.data.ToString());
-
-                        string action = data.ContainsKey("action") ? data["action"] : "";
-
-                        string reply = "";
-
-                        if (action == "login")
+                        if (!data.ContainsKey("username") || data["username"].Length < 1 || !data.ContainsKey("key") || !data["key"].Equals(keyTextBox.Text))
                         {
-                            string user = data["username"];
-                            string pass = data["password"];
-
-                            if (Database.CheckLogin(user, pass))
-                            {
-                                obj.username.Append(user);
-                                reply = "{\"status\": \"LOGIN_SUCCESS\"}";
-                            }
-                            else
-                            {
-                                reply = "{\"status\": \"LOGIN_FAIL\"}";
-                                obj.client.Close();
-                            }
-                        }
-                        else if (action == "register")
-                        {
-                            string user = data["username"];
-                            string pass = data["password"];
-                            string email = data["email"];
-
-                            if (Database.Register(user, pass, email))
-                                reply = "{\"status\": \"REGISTER_SUCCESS\"}";
-                            else
-                                reply = "{\"status\": \"REGISTER_FAIL\"}";
+                            obj.client.Close();
                         }
                         else
                         {
-                            reply = "{\"status\": \"UNKNOWN_ACTION\"}";
+                            obj.username.Append(data["username"].Length > 200 ? data["username"].Substring(0, 200) : data["username"]);
+                            Send("{\"status\": \"authorized\"}", obj);
                         }
-
-                        Send(reply, obj);
                         obj.data.Clear();
-                        obj.handle.Set();
-                    }
-                    obj.data.Clear();
                         obj.handle.Set();
                     }
                 }
@@ -287,6 +302,7 @@ namespace Server
         {
             if (Authorize(obj))
             {
+                tcpClient = obj.client;
                 clients.TryAdd(obj.id, obj);
                 AddToGrid(obj.id, obj.username.ToString());
                 string msg = string.Format("{0} has connected", obj.username);
@@ -385,17 +401,10 @@ namespace Server
                     error = true;
                     Log(SystemMsg("Address is required"));
                 }
-                else
+                else if (!TryResolveIPv4(address, out ip))
                 {
-                    try
-                    {
-                        ip = Dns.Resolve(address).AddressList[0];
-                    }
-                    catch
-                    {
-                        error = true;
-                        Log(SystemMsg("Address is not valid"));
-                    }
+                    error = true;
+                    Log(SystemMsg("Address is not valid or is not IPv4"));
                 }
                 int port = -1;
                 if (number.Length < 1)
@@ -520,6 +529,50 @@ namespace Server
             }
         }
 
+        private void ConnectionFields_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+                StartButton_Click(sender, EventArgs.Empty);
+            }
+        }
+        private void ClientsDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0 && e.ColumnIndex == clientsDataGridView.Columns["dc"].Index)
+            {
+                long.TryParse(clientsDataGridView.Rows[e.RowIndex].Cells["identifier"].Value.ToString(), out long id);
+                Disconnect(id);
+            }
+            if (e.RowIndex >= 0 && e.ColumnIndex == clientsDataGridView.Columns["Message"].Index)
+            {
+                long clientId = Convert.ToInt64(clientsDataGridView.Rows[e.RowIndex].Cells["identifier"].Value);
+                using (Message messageForm = new Message(clientId))
+                {
+                    if (messageForm.ShowDialog() == DialogResult.OK)
+                    {
+                        string message = messageForm.MessageText;
+                        SendMessageToClient(message, clientId);
+                    }
+                }
+            }
+        }
+        // Phương thức gửi tin nhắn cho client
+        private void SendMessageToClient(string message, long clientId)
+        {
+            if (clients.TryGetValue(clientId, out MyClient client))
+            {
+                string finalMsg = $"Server: {message}";
+
+                byte[] buffer = Encoding.UTF8.GetBytes(finalMsg);
+                client.stream.BeginWrite(buffer, 0, buffer.Length, new AsyncCallback(Write), client);
+
+                Log($"SYSTEM: Gửi tin nhắn riêng đến client ({client.username}): {message}");
+            }
+        }
+
+
         private void Disconnect(long id = -1) // disconnect everyone if ID is not supplied or is lesser than zero
         {
             if (disconnect == null || !disconnect.IsAlive)
@@ -560,30 +613,273 @@ namespace Server
             Disconnect();
         }
 
-        private void ClientsDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex >= 0 && e.ColumnIndex == clientsDataGridView.Columns["dc"].Index)
-            {
-                long.TryParse(clientsDataGridView.Rows[e.RowIndex].Cells["identifier"].Value.ToString(), out long id);
-                Disconnect(id);
-            }
-        }
-
         private void ClearButton_Click(object sender, EventArgs e)
         {
-            Log();
+            chatPanel.Controls.Clear();
         }
 
         private void CheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (keyTextBox.PasswordChar == '*')
+            keyTextBox.PasswordChar = checkBox.Checked ? '*' : '\0';
+        }
+
+        private void ClockTimer_Tick(object sender, EventArgs e)
+        {
+            clockLabel.Text = DateTime.Now.ToString("HH:mm:ss dd/MM/yyyy");
+        }
+
+        private void clientsDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private bool TryResolveIPv4(string host, out IPAddress ipAddress)
+        {
+            ipAddress = null;
+            if (IPAddress.TryParse(host, out IPAddress literal) && literal.AddressFamily == AddressFamily.InterNetwork)
             {
-                keyTextBox.PasswordChar = '\0';
+                ipAddress = literal;
+                return true;
             }
-            else
+
+            try
             {
-                keyTextBox.PasswordChar = '*';
+                foreach (IPAddress candidate in Dns.GetHostEntry(host).AddressList)
+                {
+                    if (candidate.AddressFamily == AddressFamily.InterNetwork)
+                    {
+                        ipAddress = candidate;
+                        return true;
+                    }
+                }
             }
+            catch
+            {
+                // ignored - method will return false so we can show a friendly error.
+            }
+
+            return false;
+        }
+
+        private void DisplayAttachment(string msg)
+        {
+            if (exit)
+            {
+                return;
+            }
+
+            chatPanel.Invoke((MethodInvoker)delegate
+            {
+                if (msg.StartsWith("[IMAGE]"))
+                {
+                    if (!TryParseAttachment(msg, out string user, out string fileName, out byte[] data, "hình ảnh"))
+                    {
+                        return;
+                    }
+
+                    AddSenderLabel(user);
+
+                    Image previewImage;
+                    using (MemoryStream ms = new MemoryStream(data))
+                    {
+                        try
+                        {
+                            previewImage = (Image)Image.FromStream(ms).Clone();
+                        }
+                        catch (Exception ex)
+                        {
+                            Log(ErrorMsg($"Không thể đọc hình ảnh: {ex.Message}"));
+                            return;
+                        }
+                    }
+
+                    PictureBox pic = new PictureBox
+                    {
+                        Image = previewImage,
+                        SizeMode = PictureBoxSizeMode.Zoom,
+                        Width = 250,
+                        Height = 180,
+                        Cursor = Cursors.Hand
+                    };
+
+                    pic.Click += (s, e) => ShowImageViewer(fileName, previewImage);
+                    pic.Disposed += (s, e) => pic.Image?.Dispose();
+
+                    ContextMenuStrip menu = new ContextMenuStrip();
+                    menu.Items.Add("Xem ảnh", null, (s, e) => ShowImageViewer(fileName, previewImage));
+                    menu.Items.Add("Lưu ảnh...", null, (s, e) => SaveAttachment(data, fileName, "Image Files|*.png;*.jpg;*.jpeg;*.bmp|All files|*.*", askOpen: false));
+                    pic.ContextMenuStrip = menu;
+
+                    chatPanel.Controls.Add(pic);
+                    chatPanel.ScrollControlIntoView(pic);
+                    return;
+                }
+
+                if (msg.StartsWith("[FILE]"))
+                {
+                    if (!TryParseAttachment(msg, out string user, out string fileName, out byte[] data, "tệp"))
+                    {
+                        return;
+                    }
+
+                    AddSenderLabel(user);
+
+                    FlowLayoutPanel fileContainer = new FlowLayoutPanel
+                    {
+                        AutoSize = true,
+                        FlowDirection = FlowDirection.LeftToRight,
+                        Margin = new Padding(0, 0, 0, 5)
+                    };
+
+                    Label fileLabel = new Label
+                    {
+                        Text = "📁 " + fileName,
+                        AutoSize = true,
+                        Font = new Font("Segoe UI", 9.75f, FontStyle.Underline),
+                        ForeColor = Color.Blue,
+                        Cursor = Cursors.Hand,
+                        Margin = new Padding(0, 6, 6, 0)
+                    };
+                    fileLabel.Click += (s, e) => SaveAttachment(data, fileName, "All files|*.*", askOpen: true);
+
+                    Button downloadButton = new Button
+                    {
+                        Text = "Tải xuống",
+                        AutoSize = true,
+                        Margin = new Padding(0, 0, 6, 0)
+                    };
+                    downloadButton.Click += (s, e) => SaveAttachment(data, fileName, "All files|*.*", askOpen: true);
+
+                    Label sizeLabel = new Label
+                    {
+                        AutoSize = true,
+                        Text = $"({FormatFileSize(data.Length)})",
+                        Margin = new Padding(0, 6, 0, 0)
+                    };
+
+                    fileContainer.Controls.Add(fileLabel);
+                    fileContainer.Controls.Add(downloadButton);
+                    fileContainer.Controls.Add(sizeLabel);
+                    chatPanel.Controls.Add(fileContainer);
+                    chatPanel.ScrollControlIntoView(fileContainer);
+                }
+            });
+        }
+
+        private void AddSenderLabel(string user)
+        {
+            Label userLabel = new Label
+            {
+                Text = $"[{DateTime.Now:HH:mm:ss}] {user}:",
+                AutoSize = true,
+                Font = new Font("Segoe UI", 9.75f, FontStyle.Regular)
+            };
+            chatPanel.Controls.Add(userLabel);
+        }
+
+        private bool TryParseAttachment(string msg, out string user, out string fileName, out byte[] data, string description)
+        {
+            user = string.Empty;
+            fileName = string.Empty;
+            data = Array.Empty<byte>();
+            string[] parts = msg.Split('|');
+            if (parts.Length < 4)
+            {
+                Log(ErrorMsg($"Dữ liệu {description} không đúng định dạng."));
+                return false;
+            }
+            user = parts[1];
+            fileName = parts[2];
+            string base64 = string.Join("|", parts, 3, parts.Length - 3);
+            return TryDecodeBase64(base64, description, out data);
+        }
+
+        private bool TryDecodeBase64(string base64, string description, out byte[] data)
+        {
+            data = Array.Empty<byte>();
+            try
+            {
+                data = Convert.FromBase64String(base64);
+                return true;
+            }
+            catch (FormatException ex)
+            {
+                Log(ErrorMsg($"Dữ liệu {description} không hợp lệ: {ex.Message}"));
+            }
+            catch (Exception ex)
+            {
+                Log(ErrorMsg($"Không thể đọc dữ liệu {description}: {ex.Message}"));
+            }
+
+            return false;
+        }
+
+        private void SaveAttachment(byte[] data, string fileName, string filter, bool askOpen)
+        {
+            try
+            {
+                using (SaveFileDialog saveDialog = new SaveFileDialog
+                {
+                    FileName = fileName,
+                    Filter = filter
+                })
+                {
+                    if (saveDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        File.WriteAllBytes(saveDialog.FileName, data);
+                        if (askOpen)
+                        {
+                            DialogResult open = MessageBox.Show("Tệp đã lưu. Mở ngay bây giờ?", "Mở tệp", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                            if (open == DialogResult.Yes)
+                            {
+                                ProcessStartInfo psi = new ProcessStartInfo(saveDialog.FileName)
+                                {
+                                    UseShellExecute = true
+                                };
+                                Process.Start(psi);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Không thể lưu tệp: {ex.Message}");
+            }
+        }
+
+        private void ShowImageViewer(string fileName, Image preview)
+        {
+            Form viewer = new Form
+            {
+                Text = fileName,
+                Size = new Size(600, 600),
+                StartPosition = FormStartPosition.CenterParent
+            };
+
+            PictureBox big = new PictureBox
+            {
+                Dock = DockStyle.Fill,
+                SizeMode = PictureBoxSizeMode.Zoom,
+                Image = (Image)preview.Clone()
+            };
+
+            viewer.FormClosed += (s, e) => big.Image?.Dispose();
+            viewer.Controls.Add(big);
+            viewer.ShowDialog();
+        }
+
+        private string FormatFileSize(long bytes)
+        {
+            string[] suffixes = { "B", "KB", "MB", "GB" };
+            double size = bytes;
+            int order = 0;
+            while (size >= 1024 && order < suffixes.Length - 1)
+            {
+                order++;
+                size /= 1024;
+            }
+            return $"{size:0.##} {suffixes[order]}";
         }
     }
 }

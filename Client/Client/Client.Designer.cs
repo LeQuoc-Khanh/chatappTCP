@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.connectButton = new System.Windows.Forms.Button();
             this.portLabel = new System.Windows.Forms.Label();
             this.localaddrLabel = new System.Windows.Forms.Label();
             this.portTextBox = new System.Windows.Forms.TextBox();
             this.logLabel = new System.Windows.Forms.Label();
-            this.logTextBox = new System.Windows.Forms.TextBox();
             this.sendLabel = new System.Windows.Forms.Label();
             this.sendTextBox = new System.Windows.Forms.TextBox();
             this.clearButton = new System.Windows.Forms.Button();
@@ -42,8 +42,11 @@
             this.keyLabel = new System.Windows.Forms.Label();
             this.keyTextBox = new System.Windows.Forms.TextBox();
             this.addrTextBox = new System.Windows.Forms.TextBox();
-            this.versionLabel = new System.Windows.Forms.Label();
             this.checkBox = new System.Windows.Forms.CheckBox();
+            this.chatPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.btnSend = new System.Windows.Forms.Button();
+            this.clockLabel = new System.Windows.Forms.Label();
+            this.clockTimer = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // connectButton
@@ -89,6 +92,7 @@
             this.portTextBox.TabStop = false;
             this.portTextBox.Text = "9000";
             this.portTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.portTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ConnectionFields_KeyDown);
             // 
             // logLabel
             // 
@@ -99,19 +103,6 @@
             this.logLabel.Size = new System.Drawing.Size(25, 13);
             this.logLabel.TabIndex = 31;
             this.logLabel.Text = "Log";
-            // 
-            // logTextBox
-            // 
-            this.logTextBox.BackColor = System.Drawing.SystemColors.Window;
-            this.logTextBox.Location = new System.Drawing.Point(13, 138);
-            this.logTextBox.Margin = new System.Windows.Forms.Padding(4);
-            this.logTextBox.Multiline = true;
-            this.logTextBox.Name = "logTextBox";
-            this.logTextBox.ReadOnly = true;
-            this.logTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.logTextBox.Size = new System.Drawing.Size(568, 301);
-            this.logTextBox.TabIndex = 30;
-            this.logTextBox.TabStop = false;
             // 
             // sendLabel
             // 
@@ -167,6 +158,7 @@
             this.usernameTextBox.TabStop = false;
             this.usernameTextBox.Text = "Client";
             this.usernameTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.usernameTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ConnectionFields_KeyDown);
             // 
             // keyLabel
             // 
@@ -184,10 +176,12 @@
             this.keyTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.keyTextBox.MaxLength = 200;
             this.keyTextBox.Name = "keyTextBox";
+            this.keyTextBox.PasswordChar = '*';
             this.keyTextBox.Size = new System.Drawing.Size(132, 20);
             this.keyTextBox.TabIndex = 37;
             this.keyTextBox.TabStop = false;
             this.keyTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.keyTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ConnectionFields_KeyDown);
             // 
             // addrTextBox
             // 
@@ -201,35 +195,73 @@
             this.addrTextBox.TabStop = false;
             this.addrTextBox.Text = "127.0.0.1";
             this.addrTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // versionLabel
-            // 
-            this.versionLabel.AutoSize = true;
-            this.versionLabel.Location = new System.Drawing.Point(553, 447);
-            this.versionLabel.Margin = new System.Windows.Forms.Padding(8, 4, 4, 4);
-            this.versionLabel.Name = "versionLabel";
-            this.versionLabel.Size = new System.Drawing.Size(28, 13);
-            this.versionLabel.TabIndex = 40;
-            this.versionLabel.Text = "v1.5";
+            this.addrTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ConnectionFields_KeyDown);
             // 
             // checkBox
             // 
+            this.checkBox.AutoSize = true;
+            this.checkBox.Checked = true;
+            this.checkBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBox.Cursor = System.Windows.Forms.Cursors.Hand;
             this.checkBox.Location = new System.Drawing.Point(449, 74);
             this.checkBox.Margin = new System.Windows.Forms.Padding(4);
             this.checkBox.Name = "checkBox";
-            this.checkBox.Size = new System.Drawing.Size(72, 20);
+            this.checkBox.Size = new System.Drawing.Size(72, 17);
             this.checkBox.TabIndex = 41;
             this.checkBox.Text = "Hide key";
             this.checkBox.UseVisualStyleBackColor = true;
             this.checkBox.CheckedChanged += new System.EventHandler(this.CheckBox_CheckedChanged);
             // 
-            // Client
+            // chatPanel
             // 
+            this.chatPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.chatPanel.AutoScroll = true;
+            this.chatPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.chatPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.chatPanel.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.chatPanel.Location = new System.Drawing.Point(13, 153);
+            this.chatPanel.Name = "chatPanel";
+            this.chatPanel.Size = new System.Drawing.Size(568, 287);
+            this.chatPanel.TabIndex = 42;
+            this.chatPanel.WrapContents = false;
+            this.chatPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.chatPanel_Paint);
+            // 
+            // btnSend
+            //
+            this.btnSend.Location = new System.Drawing.Point(49, 442);
+            this.btnSend.Name = "btnSend";
+            this.btnSend.Size = new System.Drawing.Size(68, 22);
+            this.btnSend.TabIndex = 43;
+            this.btnSend.Text = "Attach";
+            this.btnSend.UseVisualStyleBackColor = true;
+            this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
+            //
+            // clockLabel
+            //
+            this.clockLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.clockLabel.AutoSize = true;
+            this.clockLabel.Location = new System.Drawing.Point(357, 84);
+            this.clockLabel.Name = "clockLabel";
+            this.clockLabel.Size = new System.Drawing.Size(104, 13);
+            this.clockLabel.TabIndex = 44;
+            this.clockLabel.Text = "00:00:00 01/01/2000";
+            //
+            // clockTimer
+            //
+            this.clockTimer.Enabled = true;
+            this.clockTimer.Interval = 1000;
+            this.clockTimer.Tick += new System.EventHandler(this.ClockTimer_Tick);
+            //
+            // Client
+            //
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(594, 501);
+            this.Controls.Add(this.clockLabel);
+            this.Controls.Add(this.btnSend);
+            this.Controls.Add(this.chatPanel);
             this.Controls.Add(this.checkBox);
-            this.Controls.Add(this.versionLabel);
             this.Controls.Add(this.addrTextBox);
             this.Controls.Add(this.keyLabel);
             this.Controls.Add(this.keyTextBox);
@@ -239,7 +271,6 @@
             this.Controls.Add(this.sendLabel);
             this.Controls.Add(this.sendTextBox);
             this.Controls.Add(this.logLabel);
-            this.Controls.Add(this.logTextBox);
             this.Controls.Add(this.connectButton);
             this.Controls.Add(this.portLabel);
             this.Controls.Add(this.localaddrLabel);
@@ -264,7 +295,6 @@
         private System.Windows.Forms.Label localaddrLabel;
         private System.Windows.Forms.TextBox portTextBox;
         private System.Windows.Forms.Label logLabel;
-        private System.Windows.Forms.TextBox logTextBox;
         private System.Windows.Forms.Label sendLabel;
         private System.Windows.Forms.TextBox sendTextBox;
         private System.Windows.Forms.Button clearButton;
@@ -273,8 +303,11 @@
         private System.Windows.Forms.Label keyLabel;
         private System.Windows.Forms.TextBox keyTextBox;
         private System.Windows.Forms.TextBox addrTextBox;
-        private System.Windows.Forms.Label versionLabel;
         private System.Windows.Forms.CheckBox checkBox;
+        private System.Windows.Forms.FlowLayoutPanel chatPanel;
+        private System.Windows.Forms.Button btnSend;
+        private System.Windows.Forms.Label clockLabel;
+        private System.Windows.Forms.Timer clockTimer;
     }
 }
 
