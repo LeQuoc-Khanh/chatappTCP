@@ -57,7 +57,7 @@ namespace Server
                 {
                     AutoSize = true,
                     MaximumSize = new Size(maxWidth, 0),
-                    Text = string.Format("[{0}] {1}", DateTime.Now.ToString("HH:mm"), msg),
+                    Text = string.Format("[ {0} ] {1}", DateTime.Now.ToString("HH:mm"), msg),
                 };
 
                 chatPanel.Controls.Add(logEntry);
@@ -160,27 +160,41 @@ namespace Server
                     else
                     {
                         string rawMsg = obj.data.ToString();
-                        obj.data.Clear();                      
-                        string logMsg;
+                        obj.data.Clear();
+                        try
+                        {
+                            if (rawMsg.StartsWith("[IMAGE]"))
+                            {
+                                string logMsg = $"{obj.username} sent an image.";
+                                DisplayAttachment(rawMsg);
+                                Log(logMsg);
+                                Send(rawMsg, obj.id); // broadcast
+                            }
+                            else if (rawMsg.StartsWith("[FILE]"))
+                            {
+                                string logMsg = $"{obj.username} sent a file.";
+                                DisplayAttachment(rawMsg);
+                                Log(logMsg);
+                                Send(rawMsg, obj.id);
+                            }
+                            else if (rawMsg.StartsWith("[PRIVATE]"))
+                            {
+                                HandlePrivateMessage(rawMsg, obj);
+                            }
+                            else
+                            {
+                                string logMsg = rawMsg; // đã là "username: message"
+                                Log(logMsg);
+                                Send(rawMsg, obj.id);
+                            }
 
-                        if (rawMsg.StartsWith("[IMAGE]"))
-                        {
-                            logMsg = $"{obj.username} sent an image.";
-                            DisplayAttachment(rawMsg);
+                            obj.handle.Set();
                         }
-                        else if (rawMsg.StartsWith("[FILE]"))
+                        catch (Exception ex)
                         {
-                            logMsg = $"{obj.username} sent a file.";
-                            DisplayAttachment(rawMsg);
+                            Log(ErrorMsg(ex.Message));
+                            obj.handle.Set();
                         }
-                        else
-                        {
-                            logMsg = $"{obj.username}: {rawMsg}";
-                        }
-
-                        Log(logMsg);
-                        Send(rawMsg, obj.id);
-                        obj.handle.Set();
                     }
                 }
                 catch (Exception ex)
@@ -287,6 +301,8 @@ namespace Server
                 string msg = string.Format("{0} has connected", obj.username);
                 Log(SystemMsg(msg));
                 Send(SystemMsg(msg), obj.id);
+
+                BroadcastUserList();
                 while (obj.client.Connected)
                 {
                     try
@@ -300,11 +316,16 @@ namespace Server
                     }
                 }
                 obj.client.Close();
-                clients.TryRemove(obj.id, out MyClient tmp);
-                RemoveFromGrid(tmp.id);
-                msg = string.Format("{0} has disconnected", tmp.username);
-                Log(SystemMsg(msg));
-                Send(msg, tmp.id);
+                if (clients.TryRemove(obj.id, out MyClient tmp))
+                {
+                    RemoveFromGrid(tmp.id);
+
+                    msg = string.Format("{0} has disconnected", tmp.username);
+                    Log(SystemMsg(msg));
+                    Send(SystemMsg(msg), tmp.id);   // nếu muốn client cũng thấy SYSTEM:
+
+                    BroadcastUserList();
+                }
             }
         }
 
@@ -476,7 +497,7 @@ namespace Server
             }
             else
             {
-                send.ContinueWith(antecendent => BeginWrite(msg, obj));
+                send.ContinueWith(_ => BeginWrite(msg, obj));
             }
         }
 
@@ -491,6 +512,18 @@ namespace Server
                 send.ContinueWith(antecendent => BeginWrite(msg, id));
             }
         }
+        private void SendServerMessage()
+        {
+            if (sendTextBox.Text.Length > 0)
+            {
+                string msg = sendTextBox.Text;
+                sendTextBox.Clear();
+
+                string user = usernameTextBox.Text.Trim();
+                Log(string.Format("{0} (You): {1}", user, msg));
+                Send(string.Format("{0}: {1}", user, msg));
+            }
+        }
 
         private void SendTextBox_KeyDown(object sender, KeyEventArgs e)
         {
@@ -498,13 +531,7 @@ namespace Server
             {
                 e.Handled = true;
                 e.SuppressKeyPress = true;
-                if (sendTextBox.Text.Length > 0)
-                {
-                    string msg = sendTextBox.Text;
-                    sendTextBox.Clear();
-                    Log(string.Format("{0} (You): {1}", usernameTextBox.Text.Trim(), msg));
-                    Send(string.Format("{0}: {1}", usernameTextBox.Text.Trim(), msg));
-                }
+                SendServerMessage();
             }
         }
 
@@ -560,16 +587,27 @@ namespace Server
                 {
                     if (id >= 0)
                     {
-                        clients.TryGetValue(id, out MyClient obj);
-                        obj.client.Close();
-                        RemoveFromGrid(obj.id);
+                        if (clients.TryRemove(id, out MyClient obj))
+                        {
+                            try { obj.client.Close(); } catch { }
+                            RemoveFromGrid(obj.id);
+
+                            string msg = $"{obj.username} has been disconnected by server";
+                            Log(SystemMsg(msg));
+                            Send(SystemMsg(msg), obj.id);
+
+                            BroadcastUserList();
+                        }
                     }
                     else
                     {
-                        foreach (KeyValuePair<long, MyClient> obj in clients)
+                        foreach (var kvp in clients)
                         {
-                            obj.Value.client.Close();
-                            RemoveFromGrid(obj.Value.id);
+                            if (clients.TryRemove(kvp.Key, out MyClient obj))
+                            {
+                                try { obj.client.Close(); } catch { }
+                                RemoveFromGrid(obj.id);
+                            }
                         }
                     }
                 })
@@ -744,7 +782,7 @@ namespace Server
         {
             Label userLabel = new Label
             {
-                Text = $"[{DateTime.Now:HH:mm:ss}] {user}:",
+                Text = $"[{DateTime.Now:HH:mm}] {user}:",
                 AutoSize = true,
                 Font = new Font("Segoe UI", 9.75f, FontStyle.Regular)
             };
@@ -855,5 +893,57 @@ namespace Server
             }
             return $"{size:0.##} {suffixes[order]}";
         }
+
+        private void SendButton_Click(object sender, EventArgs e)
+        {
+            SendServerMessage();
+        }
+
+        // Gửi danh sách client cho mọi người
+        // Format: [USERLIST]|id1:username1|id2:username2|...
+        private void BroadcastUserList()
+        {
+            try
+            {
+                List<string> items = new List<string>();
+                foreach (var kvp in clients)
+                {
+                    items.Add($"{kvp.Key}:{kvp.Value.username}"); // username là StringBuilder
+                }
+
+                string msg = "[USERLIST]|" + string.Join("|", items);
+                // Gửi cho TẤT CẢ (id = -1)
+                Send(msg);
+            }
+            catch (Exception ex)
+            {
+                Log(ErrorMsg(ex.Message));
+            }
+        }
+
+        private void HandlePrivateMessage(string rawMsg, MyClient sender)
+        {
+            try
+            {
+                string[] parts = rawMsg.Split(new[] { '|' }, 3);
+                if (parts.Length < 3) return;
+
+                if (!long.TryParse(parts[1], out long targetId)) return;
+                string payload = parts[2]; // ví dụ: "Alice (private): Hello"
+
+                Log($"(PRIVATE) {payload}");
+
+                if (clients.TryGetValue(targetId, out MyClient target))
+                {
+                    // gửi riêng cho 1 client
+                    Send(payload, target);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(ErrorMsg(ex.Message));
+            }
+        }
     }
+
 }

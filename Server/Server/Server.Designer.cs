@@ -44,7 +44,6 @@ namespace Server
             this.clearButton = new System.Windows.Forms.Button();
             this.disconnectButton = new System.Windows.Forms.Button();
             this.sendTextBox = new System.Windows.Forms.TextBox();
-            this.sendLabel = new System.Windows.Forms.Label();
             this.clientsDataGridView = new System.Windows.Forms.DataGridView();
             this.identifier = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -59,6 +58,7 @@ namespace Server
             this.checkBox = new System.Windows.Forms.CheckBox();
             this.contentLabel = new System.Windows.Forms.Label();
             this.chatPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.SendButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.clientsDataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -135,25 +135,14 @@ namespace Server
             // 
             // sendTextBox
             // 
-            this.sendTextBox.Location = new System.Drawing.Point(13, 580);
+            this.sendTextBox.Location = new System.Drawing.Point(13, 559);
             this.sendTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.sendTextBox.Name = "sendTextBox";
             this.sendTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.sendTextBox.Size = new System.Drawing.Size(566, 22);
+            this.sendTextBox.Size = new System.Drawing.Size(486, 22);
             this.sendTextBox.TabIndex = 27;
             this.sendTextBox.TabStop = false;
             this.sendTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SendTextBox_KeyDown);
-            // 
-            // sendLabel
-            // 
-            this.sendLabel.AutoSize = true;
-            this.sendLabel.BackColor = System.Drawing.Color.Transparent;
-            this.sendLabel.Location = new System.Drawing.Point(10, 559);
-            this.sendLabel.Margin = new System.Windows.Forms.Padding(8, 4, 4, 4);
-            this.sendLabel.Name = "sendLabel";
-            this.sendLabel.Size = new System.Drawing.Size(39, 16);
-            this.sendLabel.TabIndex = 28;
-            this.sendLabel.Text = "Send";
             // 
             // clientsDataGridView
             // 
@@ -211,7 +200,7 @@ namespace Server
             this.clientsDataGridView.ShowCellToolTips = false;
             this.clientsDataGridView.ShowEditingIcon = false;
             this.clientsDataGridView.ShowRowErrors = false;
-            this.clientsDataGridView.Size = new System.Drawing.Size(341, 587);
+            this.clientsDataGridView.Size = new System.Drawing.Size(341, 570);
             this.clientsDataGridView.TabIndex = 30;
             this.clientsDataGridView.TabStop = false;
             this.clientsDataGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ClientsDataGridView_CellClick);
@@ -384,10 +373,21 @@ namespace Server
             this.chatPanel.Size = new System.Drawing.Size(566, 392);
             this.chatPanel.TabIndex = 44;
             // 
+            // SendButton
+            // 
+            this.SendButton.Location = new System.Drawing.Point(506, 558);
+            this.SendButton.Name = "SendButton";
+            this.SendButton.Size = new System.Drawing.Size(75, 25);
+            this.SendButton.TabIndex = 45;
+            this.SendButton.Text = "Send";
+            this.SendButton.UseVisualStyleBackColor = true;
+            this.SendButton.Click += new System.EventHandler(this.SendButton_Click);
+            // 
             // Server
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(938, 620);
+            this.ClientSize = new System.Drawing.Size(938, 596);
+            this.Controls.Add(this.SendButton);
             this.Controls.Add(this.checkBox);
             this.Controls.Add(this.chatPanel);
             this.Controls.Add(this.contentLabel);
@@ -398,7 +398,6 @@ namespace Server
             this.Controls.Add(this.usernameLabel);
             this.Controls.Add(this.totalLabel);
             this.Controls.Add(this.clientsDataGridView);
-            this.Controls.Add(this.sendLabel);
             this.Controls.Add(this.sendTextBox);
             this.Controls.Add(this.disconnectButton);
             this.Controls.Add(this.clearButton);
@@ -429,7 +428,6 @@ namespace Server
         private System.Windows.Forms.Button clearButton;
         private System.Windows.Forms.Button disconnectButton;
         private System.Windows.Forms.TextBox sendTextBox;
-        private System.Windows.Forms.Label sendLabel;
         private System.Windows.Forms.DataGridView clientsDataGridView;
         private System.Windows.Forms.Label totalLabel;
         private System.Windows.Forms.Label usernameLabel;
@@ -444,6 +442,7 @@ namespace Server
         private System.Windows.Forms.DataGridViewButtonColumn Message;
         private System.Windows.Forms.Label contentLabel;
         private System.Windows.Forms.FlowLayoutPanel chatPanel;
+        private Button SendButton;
     }
 }
 

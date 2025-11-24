@@ -331,8 +331,9 @@ namespace Client
                     else
                     {
                         string message = obj.data.ToString();
-                        DisplayMessage(message);
                         obj.data.Clear();
+
+                        HandleIncomingMessage(message); 
                         obj.handle.Set();
                     }
                 }
@@ -620,14 +621,23 @@ namespace Client
             {
                 e.Handled = true;
                 e.SuppressKeyPress = true;
-                string msg = sendTextBox.Text.Trim();
-                if (msg.Length > 0)
-                {
-                    DisplayMessage($"{obj.username} (You): {msg}");
-                    Send($"{obj.username}: {msg}");
-                    sendTextBox.Clear();
-                }
+                SendTextMessage();
             }
+        }
+        private void SendTextMessage()
+        {
+            if (!connected) return;                // không gửi khi chưa connect
+
+            string msg = sendTextBox.Text.Trim();
+            if (msg.Length == 0) return;
+
+            // Hiện lên màn hình cho chính mình
+            DisplayMessage($"{obj.username} (You): {msg}");
+
+            // Gửi cho server (server sẽ forward cho client khác)
+            Send($"{obj.username}: {msg}");
+
+            sendTextBox.Clear();
         }
 
         private void ConnectionFields_KeyDown(object sender, KeyEventArgs e)
@@ -692,5 +702,130 @@ namespace Client
 
             return false;
         }
+
+        private void btnSendText_Click(object sender, EventArgs e)
+        {
+            SendTextMessage();
+        }
+
+        private void clientsDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (!connected) return;
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+
+            // Chỉ xử lý khi click vào cột "Message"
+            if (clientsDataGridView.Columns[e.ColumnIndex].Name == "Message")
+            {
+                string idStr = clientsDataGridView.Rows[e.RowIndex].Cells["identifier"].Value?.ToString();
+                string targetName = clientsDataGridView.Rows[e.RowIndex].Cells["username"].Value?.ToString();
+
+                if (!long.TryParse(idStr, out long targetId) || string.IsNullOrEmpty(targetName))
+                    return;
+
+                string text = PromptPrivateMessage(targetName);
+                if (string.IsNullOrWhiteSpace(text)) return;
+
+                // Hiện cho chính mình
+                DisplayMessage($"(Private to {targetName}) {obj.username}: {text}");
+
+                // Gửi lên server
+                string payload = $"{obj.username} (private): {text}";
+                string msg = $"[PRIVATE]|{targetId}|{payload}";
+                Send(msg);
+            }
+        }
+
+        private void HandleIncomingMessage(string message)
+        {
+            if (message.StartsWith("[USERLIST]"))
+            {
+                UpdateClientGrid(message);
+            }
+            else
+            {
+                DisplayMessage(message);
+            }
+        }
+
+        // message format: [USERLIST]|id1:username1|id2:username2|...
+        private void UpdateClientGrid(string message)
+        {
+            string[] parts = message.Split('|');
+            var rows = new List<(long id, string name)>();
+
+            for (int i = 1; i < parts.Length; i++)
+            {
+                string item = parts[i];
+                if (string.IsNullOrWhiteSpace(item)) continue;
+
+                string[] kv = item.Split(new[] { ':' }, 2);
+                if (kv.Length == 2 && long.TryParse(kv[0], out long id))
+                {
+                    string name = kv[1];
+
+                    // nếu không muốn hiển thị chính mình:
+                    if (string.Equals(name, obj.username, StringComparison.OrdinalIgnoreCase))
+                        continue;
+
+                    rows.Add((id, name));
+                }
+            }
+
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(() => BindClientGrid(rows)));
+            }
+            else
+            {
+                BindClientGrid(rows);
+            }
+        }
+
+        private void BindClientGrid(List<(long id, string name)> rows)
+        {
+            clientsDataGridView.Rows.Clear();
+            foreach (var r in rows)
+            {
+                clientsDataGridView.Rows.Add(r.id.ToString(), r.name);
+            }
+        }
+
+        private string PromptPrivateMessage(string targetName)
+        {
+            using (Form f = new Form())
+            {
+                f.Text = "Private message to " + targetName;
+                f.StartPosition = FormStartPosition.CenterParent;
+                f.Size = new Size(400, 200);
+
+                TextBox txt = new TextBox
+                {
+                    Multiline = true,
+                    Dock = DockStyle.Fill
+                };
+
+                Button btn = new Button
+                {
+                    Text = "Send",
+                    DialogResult = DialogResult.OK,
+                    Dock = DockStyle.Bottom,
+                    Height = 30
+                };
+
+                f.Controls.Add(txt);
+                f.Controls.Add(btn);
+                f.AcceptButton = btn;
+
+                if (f.ShowDialog(this) == DialogResult.OK)
+                {
+                    return txt.Text.Trim();
+                }
+                return string.Empty;
+            }
+        }
+
+
+
     }
+
 }

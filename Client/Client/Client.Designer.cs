@@ -33,7 +33,6 @@
             this.localaddrLabel = new System.Windows.Forms.Label();
             this.portTextBox = new System.Windows.Forms.TextBox();
             this.logLabel = new System.Windows.Forms.Label();
-            this.sendLabel = new System.Windows.Forms.Label();
             this.sendTextBox = new System.Windows.Forms.TextBox();
             this.clearButton = new System.Windows.Forms.Button();
             this.usernameLabel = new System.Windows.Forms.Label();
@@ -44,6 +43,12 @@
             this.checkBox = new System.Windows.Forms.CheckBox();
             this.chatPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.btnSend = new System.Windows.Forms.Button();
+            this.btnSendText = new System.Windows.Forms.Button();
+            this.clientsDataGridView = new System.Windows.Forms.DataGridView();
+            this.identifier = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.username = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Message = new System.Windows.Forms.DataGridViewButtonColumn();
+            ((System.ComponentModel.ISupportInitialize)(this.clientsDataGridView)).BeginInit();
             this.SuspendLayout();
             // 
             // connectButton
@@ -101,23 +106,13 @@
             this.logLabel.TabIndex = 31;
             this.logLabel.Text = "Log";
             // 
-            // sendLabel
-            // 
-            this.sendLabel.AutoSize = true;
-            this.sendLabel.Location = new System.Drawing.Point(10, 447);
-            this.sendLabel.Margin = new System.Windows.Forms.Padding(8, 4, 4, 4);
-            this.sendLabel.Name = "sendLabel";
-            this.sendLabel.Size = new System.Drawing.Size(39, 16);
-            this.sendLabel.TabIndex = 33;
-            this.sendLabel.Text = "Send";
-            // 
             // sendTextBox
             // 
             this.sendTextBox.Location = new System.Drawing.Point(13, 468);
             this.sendTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.sendTextBox.Name = "sendTextBox";
             this.sendTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.sendTextBox.Size = new System.Drawing.Size(568, 22);
+            this.sendTextBox.Size = new System.Drawing.Size(519, 22);
             this.sendTextBox.TabIndex = 32;
             this.sendTextBox.TabStop = false;
             this.sendTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SendTextBox_KeyDown);
@@ -227,7 +222,7 @@
             // 
             // btnSend
             // 
-            this.btnSend.Location = new System.Drawing.Point(49, 442);
+            this.btnSend.Location = new System.Drawing.Point(12, 446);
             this.btnSend.Name = "btnSend";
             this.btnSend.Size = new System.Drawing.Size(68, 22);
             this.btnSend.TabIndex = 43;
@@ -235,10 +230,68 @@
             this.btnSend.UseVisualStyleBackColor = true;
             this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
             // 
+            // btnSendText
+            // 
+            this.btnSendText.Location = new System.Drawing.Point(539, 468);
+            this.btnSendText.Name = "btnSendText";
+            this.btnSendText.Size = new System.Drawing.Size(53, 23);
+            this.btnSendText.TabIndex = 44;
+            this.btnSendText.Text = "Send";
+            this.btnSendText.UseVisualStyleBackColor = true;
+            this.btnSendText.Click += new System.EventHandler(this.btnSendText_Click);
+            // 
+            // clientsDataGridView
+            // 
+            this.clientsDataGridView.AllowUserToAddRows = false;
+            this.clientsDataGridView.AllowUserToDeleteRows = false;
+            this.clientsDataGridView.BackgroundColor = System.Drawing.SystemColors.Window;
+            this.clientsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.clientsDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.identifier,
+            this.username,
+            this.Message});
+            this.clientsDataGridView.Location = new System.Drawing.Point(598, 23);
+            this.clientsDataGridView.Name = "clientsDataGridView";
+            this.clientsDataGridView.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+            this.clientsDataGridView.RowHeadersVisible = false;
+            this.clientsDataGridView.RowHeadersWidth = 51;
+            this.clientsDataGridView.RowTemplate.Height = 24;
+            this.clientsDataGridView.Size = new System.Drawing.Size(281, 468);
+            this.clientsDataGridView.TabIndex = 0;
+            this.clientsDataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.clientsDataGridView_CellContentClick);
+            // 
+            // identifier
+            // 
+            this.identifier.HeaderText = "ID";
+            this.identifier.MinimumWidth = 6;
+            this.identifier.Name = "identifier";
+            this.identifier.ReadOnly = true;
+            this.identifier.Width = 50;
+            // 
+            // username
+            // 
+            this.username.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.username.HeaderText = "Username";
+            this.username.MinimumWidth = 6;
+            this.username.Name = "username";
+            this.username.ReadOnly = true;
+            // 
+            // Message
+            // 
+            this.Message.HeaderText = "Private";
+            this.Message.MinimumWidth = 6;
+            this.Message.Name = "Message";
+            this.Message.ReadOnly = true;
+            this.Message.Text = "Message";
+            this.Message.UseColumnTextForButtonValue = true;
+            this.Message.Width = 80;
+            // 
             // Client
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(594, 501);
+            this.ClientSize = new System.Drawing.Size(891, 501);
+            this.Controls.Add(this.clientsDataGridView);
+            this.Controls.Add(this.btnSendText);
             this.Controls.Add(this.btnSend);
             this.Controls.Add(this.chatPanel);
             this.Controls.Add(this.checkBox);
@@ -248,7 +301,6 @@
             this.Controls.Add(this.usernameLabel);
             this.Controls.Add(this.usernameTextBox);
             this.Controls.Add(this.clearButton);
-            this.Controls.Add(this.sendLabel);
             this.Controls.Add(this.sendTextBox);
             this.Controls.Add(this.logLabel);
             this.Controls.Add(this.connectButton);
@@ -263,6 +315,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Client";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Client_FormClosing);
+            ((System.ComponentModel.ISupportInitialize)(this.clientsDataGridView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -275,7 +328,6 @@
         private System.Windows.Forms.Label localaddrLabel;
         private System.Windows.Forms.TextBox portTextBox;
         private System.Windows.Forms.Label logLabel;
-        private System.Windows.Forms.Label sendLabel;
         private System.Windows.Forms.TextBox sendTextBox;
         private System.Windows.Forms.Button clearButton;
         private System.Windows.Forms.Label usernameLabel;
@@ -286,6 +338,11 @@
         private System.Windows.Forms.CheckBox checkBox;
         private System.Windows.Forms.FlowLayoutPanel chatPanel;
         private System.Windows.Forms.Button btnSend;
+        private System.Windows.Forms.Button btnSendText;
+        private System.Windows.Forms.DataGridView clientsDataGridView;
+        private System.Windows.Forms.DataGridViewTextBoxColumn identifier;
+        private System.Windows.Forms.DataGridViewTextBoxColumn username;
+        private System.Windows.Forms.DataGridViewButtonColumn Message;
     }
 }
 
