@@ -244,6 +244,8 @@
             // 
             this.clientsDataGridView.AllowUserToAddRows = false;
             this.clientsDataGridView.AllowUserToDeleteRows = false;
+            this.clientsDataGridView.AllowUserToResizeColumns = false;
+            this.clientsDataGridView.AllowUserToResizeRows = false;
             this.clientsDataGridView.BackgroundColor = System.Drawing.SystemColors.Window;
             this.clientsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.clientsDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -252,6 +254,7 @@
             this.Message});
             this.clientsDataGridView.Location = new System.Drawing.Point(598, 23);
             this.clientsDataGridView.Name = "clientsDataGridView";
+            this.clientsDataGridView.ReadOnly = true;
             this.clientsDataGridView.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
             this.clientsDataGridView.RowHeadersVisible = false;
             this.clientsDataGridView.RowHeadersWidth = 51;

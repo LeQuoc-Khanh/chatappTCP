@@ -45,10 +45,6 @@ namespace Server
             this.disconnectButton = new System.Windows.Forms.Button();
             this.sendTextBox = new System.Windows.Forms.TextBox();
             this.clientsDataGridView = new System.Windows.Forms.DataGridView();
-            this.identifier = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dc = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.Message = new System.Windows.Forms.DataGridViewButtonColumn();
             this.totalLabel = new System.Windows.Forms.Label();
             this.usernameLabel = new System.Windows.Forms.Label();
             this.usernameTextBox = new System.Windows.Forms.TextBox();
@@ -59,6 +55,10 @@ namespace Server
             this.contentLabel = new System.Windows.Forms.Label();
             this.chatPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.SendButton = new System.Windows.Forms.Button();
+            this.identifier = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dc = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.Message = new System.Windows.Forms.DataGridViewButtonColumn();
             ((System.ComponentModel.ISupportInitialize)(this.clientsDataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -206,61 +206,6 @@ namespace Server
             this.clientsDataGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ClientsDataGridView_CellClick);
             this.clientsDataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.clientsDataGridView_CellContentClick);
             // 
-            // identifier
-            // 
-            this.identifier.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.identifier.DefaultCellStyle = dataGridViewCellStyle2;
-            this.identifier.HeaderText = "ID";
-            this.identifier.MaxInputLength = 20;
-            this.identifier.MinimumWidth = 20;
-            this.identifier.Name = "identifier";
-            this.identifier.ReadOnly = true;
-            this.identifier.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.identifier.Width = 70;
-            // 
-            // name
-            // 
-            this.name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            this.name.DefaultCellStyle = dataGridViewCellStyle3;
-            this.name.HeaderText = "Name";
-            this.name.MaxInputLength = 20;
-            this.name.MinimumWidth = 20;
-            this.name.Name = "name";
-            this.name.ReadOnly = true;
-            this.name.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            // 
-            // dc
-            // 
-            this.dc.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dc.DefaultCellStyle = dataGridViewCellStyle4;
-            this.dc.HeaderText = "Disconnect";
-            this.dc.MinimumWidth = 20;
-            this.dc.Name = "dc";
-            this.dc.ReadOnly = true;
-            this.dc.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.dc.Text = "Kick";
-            this.dc.UseColumnTextForButtonValue = true;
-            this.dc.Width = 80;
-            // 
-            // Message
-            // 
-            this.Message.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.Message.DefaultCellStyle = dataGridViewCellStyle5;
-            this.Message.HeaderText = "Gửi tin nhắn";
-            this.Message.MinimumWidth = 20;
-            this.Message.Name = "Message";
-            this.Message.ReadOnly = true;
-            this.Message.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.Message.Text = "Gửi";
-            this.Message.UseColumnTextForButtonValue = true;
-            this.Message.Width = 80;
-            // 
             // totalLabel
             // 
             this.totalLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -372,6 +317,7 @@ namespace Server
             this.chatPanel.Name = "chatPanel";
             this.chatPanel.Size = new System.Drawing.Size(566, 392);
             this.chatPanel.TabIndex = 44;
+            this.chatPanel.WrapContents = false;
             // 
             // SendButton
             // 
@@ -382,6 +328,61 @@ namespace Server
             this.SendButton.Text = "Send";
             this.SendButton.UseVisualStyleBackColor = true;
             this.SendButton.Click += new System.EventHandler(this.SendButton_Click);
+            // 
+            // identifier
+            // 
+            this.identifier.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.identifier.DefaultCellStyle = dataGridViewCellStyle2;
+            this.identifier.HeaderText = "ID";
+            this.identifier.MaxInputLength = 20;
+            this.identifier.MinimumWidth = 20;
+            this.identifier.Name = "identifier";
+            this.identifier.ReadOnly = true;
+            this.identifier.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.identifier.Width = 70;
+            // 
+            // name
+            // 
+            this.name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            this.name.DefaultCellStyle = dataGridViewCellStyle3;
+            this.name.HeaderText = "Name";
+            this.name.MaxInputLength = 20;
+            this.name.MinimumWidth = 20;
+            this.name.Name = "name";
+            this.name.ReadOnly = true;
+            this.name.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            // 
+            // dc
+            // 
+            this.dc.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dc.DefaultCellStyle = dataGridViewCellStyle4;
+            this.dc.HeaderText = "Disconnect";
+            this.dc.MinimumWidth = 20;
+            this.dc.Name = "dc";
+            this.dc.ReadOnly = true;
+            this.dc.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.dc.Text = "Kick";
+            this.dc.UseColumnTextForButtonValue = true;
+            this.dc.Width = 80;
+            // 
+            // Message
+            // 
+            this.Message.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.Message.DefaultCellStyle = dataGridViewCellStyle5;
+            this.Message.HeaderText = "Gửi tin nhắn";
+            this.Message.MinimumWidth = 20;
+            this.Message.Name = "Message";
+            this.Message.ReadOnly = true;
+            this.Message.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.Message.Text = "Gửi";
+            this.Message.UseColumnTextForButtonValue = true;
+            this.Message.Width = 80;
             // 
             // Server
             // 
@@ -436,13 +437,13 @@ namespace Server
         private System.Windows.Forms.Label keyLabel;
         private System.Windows.Forms.TextBox addrTextBox;
         private System.Windows.Forms.CheckBox checkBox;
-        private System.Windows.Forms.DataGridViewTextBoxColumn identifier;
-        private System.Windows.Forms.DataGridViewTextBoxColumn name;
-        private System.Windows.Forms.DataGridViewButtonColumn dc;
-        private System.Windows.Forms.DataGridViewButtonColumn Message;
         private System.Windows.Forms.Label contentLabel;
         private System.Windows.Forms.FlowLayoutPanel chatPanel;
         private Button SendButton;
+        private DataGridViewTextBoxColumn identifier;
+        private DataGridViewTextBoxColumn name;
+        private DataGridViewButtonColumn dc;
+        private DataGridViewButtonColumn Message;
     }
 }
 
