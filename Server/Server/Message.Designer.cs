@@ -13,7 +13,7 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(41, 96);
+            this.textBox1.Location = new System.Drawing.Point(15, 54);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(472, 22);
             this.textBox1.TabIndex = 0;
@@ -21,7 +21,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(38, 61);
+            this.label1.Location = new System.Drawing.Point(12, 20);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(91, 16);
             this.label1.TabIndex = 1;
@@ -29,9 +29,9 @@
             // 
             // btnSend
             // 
-            this.btnSend.Location = new System.Drawing.Point(450, 156);
+            this.btnSend.Location = new System.Drawing.Point(493, 54);
             this.btnSend.Name = "btnSend";
-            this.btnSend.Size = new System.Drawing.Size(75, 23);
+            this.btnSend.Size = new System.Drawing.Size(80, 25);
             this.btnSend.TabIndex = 2;
             this.btnSend.Text = "Gửi";
             this.btnSend.UseVisualStyleBackColor = true;
@@ -41,7 +41,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(582, 203);
+            this.ClientSize = new System.Drawing.Size(582, 93);
             this.Controls.Add(this.btnSend);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBox1);

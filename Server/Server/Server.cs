@@ -39,7 +39,6 @@ namespace Server
         public Server()
         {
             InitializeComponent();
-            ClockTimer_Tick(this, EventArgs.Empty);
         }
 
         private void Log(string msg)
@@ -51,25 +50,14 @@ namespace Server
 
             chatPanel.Invoke((MethodInvoker)delegate
             {
-                Color color = SystemColors.ControlText;
-                if (msg.StartsWith("ERROR"))
-                {
-                    color = Color.Firebrick;
-                }
-                else if (msg.StartsWith("SYSTEM"))
-                {
-                    color = Color.SteelBlue;
-                }
-
+                
                 int maxWidth = Math.Max(50, chatPanel.ClientSize.Width - 25);
 
                 Label logEntry = new Label
                 {
                     AutoSize = true,
                     MaximumSize = new Size(maxWidth, 0),
-                    ForeColor = color,
-                    Text = string.Format("[ {0} ] {1}", DateTime.Now.ToString("HH:mm:ss"), msg),
-                    Margin = new Padding(0, 0, 0, 4)
+                    Text = string.Format("[ {0} ] {1}", DateTime.Now.ToString("HH:mm"), msg),
                 };
 
                 chatPanel.Controls.Add(logEntry);
@@ -171,37 +159,42 @@ namespace Server
                     }
                     else
                     {
-                        string rawMsg = obj.data.ToString();   // Tin nhắn gốc từ client
+                        string rawMsg = obj.data.ToString();
                         obj.data.Clear();
-
-                        //------------------------------------------------------
-                        // 🔥 KIỂM TRA LOẠI TIN NHẮN ĐỂ SERVER HIỂN BÌNH THƯỜNG
-                        //------------------------------------------------------
-                        string logMsg;
-
-                        if (rawMsg.StartsWith("[IMAGE]"))
+                        try
                         {
-                            logMsg = $"{obj.username} sent an image.";
-                            DisplayAttachment(rawMsg);
+                            if (rawMsg.StartsWith("[IMAGE]"))
+                            {
+                                string logMsg = $"{obj.username} sent an image.";
+                                DisplayAttachment(rawMsg);
+                                Log(logMsg);
+                                Send(rawMsg, obj.id); // broadcast
+                            }
+                            else if (rawMsg.StartsWith("[FILE]"))
+                            {
+                                string logMsg = $"{obj.username} sent a file.";
+                                DisplayAttachment(rawMsg);
+                                Log(logMsg);
+                                Send(rawMsg, obj.id);
+                            }
+                            else if (rawMsg.StartsWith("[PRIVATE]"))
+                            {
+                                HandlePrivateMessage(rawMsg, obj);
+                            }
+                            else
+                            {
+                                string logMsg = rawMsg; // đã là "username: message"
+                                Log(logMsg);
+                                Send(rawMsg, obj.id);
+                            }
+
+                            obj.handle.Set();
                         }
-                        else if (rawMsg.StartsWith("[FILE]"))
+                        catch (Exception ex)
                         {
-                            logMsg = $"{obj.username} sent a file.";
-                            DisplayAttachment(rawMsg);
+                            Log(ErrorMsg(ex.Message));
+                            obj.handle.Set();
                         }
-                        else
-                        {
-                            logMsg = $"{obj.username}: {rawMsg}";
-                        }
-
-                        Log(logMsg);  // Server chỉ log thông báo sạch sẽ
-
-                        //------------------------------------------------------
-                        // 🔥 GỬI NGUYÊN BẢN (Base64 / File bytes / Text) CHO CLIENT
-                        //------------------------------------------------------
-                        Send(rawMsg, obj.id);
-
-                        obj.handle.Set();
                     }
                 }
                 catch (Exception ex)
@@ -246,7 +239,7 @@ namespace Server
                     }
                     else
                     {
-                        JavaScriptSerializer json = new JavaScriptSerializer(); // feel free to use JSON serializer
+                        JavaScriptSerializer json = new JavaScriptSerializer();
                         Dictionary<string, string> data = json.Deserialize<Dictionary<string, string>>(obj.data.ToString());
                         if (!data.ContainsKey("username") || data["username"].Length < 1 || !data.ContainsKey("key") || !data["key"].Equals(keyTextBox.Text))
                         {
@@ -308,6 +301,8 @@ namespace Server
                 string msg = string.Format("{0} has connected", obj.username);
                 Log(SystemMsg(msg));
                 Send(SystemMsg(msg), obj.id);
+
+                BroadcastUserList();
                 while (obj.client.Connected)
                 {
                     try
@@ -321,11 +316,16 @@ namespace Server
                     }
                 }
                 obj.client.Close();
-                clients.TryRemove(obj.id, out MyClient tmp);
-                RemoveFromGrid(tmp.id);
-                msg = string.Format("{0} has disconnected", tmp.username);
-                Log(SystemMsg(msg));
-                Send(msg, tmp.id);
+                if (clients.TryRemove(obj.id, out MyClient tmp))
+                {
+                    RemoveFromGrid(tmp.id);
+
+                    msg = string.Format("{0} has disconnected", tmp.username);
+                    Log(SystemMsg(msg));
+                    Send(SystemMsg(msg), tmp.id);   // nếu muốn client cũng thấy SYSTEM:
+
+                    BroadcastUserList();
+                }
             }
         }
 
@@ -497,7 +497,7 @@ namespace Server
             }
             else
             {
-                send.ContinueWith(antecendent => BeginWrite(msg, obj));
+                send.ContinueWith(_ => BeginWrite(msg, obj));
             }
         }
 
@@ -512,6 +512,18 @@ namespace Server
                 send.ContinueWith(antecendent => BeginWrite(msg, id));
             }
         }
+        private void SendServerMessage()
+        {
+            if (sendTextBox.Text.Length > 0)
+            {
+                string msg = sendTextBox.Text;
+                sendTextBox.Clear();
+
+                string user = usernameTextBox.Text.Trim();
+                Log(string.Format("{0} (You): {1}", user, msg));
+                Send(string.Format("{0}: {1}", user, msg));
+            }
+        }
 
         private void SendTextBox_KeyDown(object sender, KeyEventArgs e)
         {
@@ -519,13 +531,7 @@ namespace Server
             {
                 e.Handled = true;
                 e.SuppressKeyPress = true;
-                if (sendTextBox.Text.Length > 0)
-                {
-                    string msg = sendTextBox.Text;
-                    sendTextBox.Clear();
-                    Log(string.Format("{0} (You): {1}", usernameTextBox.Text.Trim(), msg));
-                    Send(string.Format("{0}: {1}", usernameTextBox.Text.Trim(), msg));
-                }
+                SendServerMessage();
             }
         }
 
@@ -568,7 +574,7 @@ namespace Server
                 byte[] buffer = Encoding.UTF8.GetBytes(finalMsg);
                 client.stream.BeginWrite(buffer, 0, buffer.Length, new AsyncCallback(Write), client);
 
-                Log($"SYSTEM: Gửi tin nhắn riêng đến client ({client.username}): {message}");
+                Log($"Gửi tin nhắn riêng đến {client.username}: {message}");
             }
         }
 
@@ -581,16 +587,27 @@ namespace Server
                 {
                     if (id >= 0)
                     {
-                        clients.TryGetValue(id, out MyClient obj);
-                        obj.client.Close();
-                        RemoveFromGrid(obj.id);
+                        if (clients.TryRemove(id, out MyClient obj))
+                        {
+                            try { obj.client.Close(); } catch { }
+                            RemoveFromGrid(obj.id);
+
+                            string msg = $"{obj.username} has been disconnected by server";
+                            Log(SystemMsg(msg));
+                            Send(SystemMsg(msg), obj.id);
+
+                            BroadcastUserList();
+                        }
                     }
                     else
                     {
-                        foreach (KeyValuePair<long, MyClient> obj in clients)
+                        foreach (var kvp in clients)
                         {
-                            obj.Value.client.Close();
-                            RemoveFromGrid(obj.Value.id);
+                            if (clients.TryRemove(kvp.Key, out MyClient obj))
+                            {
+                                try { obj.client.Close(); } catch { }
+                                RemoveFromGrid(obj.id);
+                            }
                         }
                     }
                 })
@@ -621,11 +638,6 @@ namespace Server
         private void CheckBox_CheckedChanged(object sender, EventArgs e)
         {
             keyTextBox.PasswordChar = checkBox.Checked ? '*' : '\0';
-        }
-
-        private void ClockTimer_Tick(object sender, EventArgs e)
-        {
-            clockLabel.Text = DateTime.Now.ToString("HH:mm:ss dd/MM/yyyy");
         }
 
         private void clientsDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -733,7 +745,7 @@ namespace Server
 
                     Label fileLabel = new Label
                     {
-                        Text = "📁 " + fileName,
+                        Text = fileName,
                         AutoSize = true,
                         Font = new Font("Segoe UI", 9.75f, FontStyle.Underline),
                         ForeColor = Color.Blue,
@@ -770,7 +782,7 @@ namespace Server
         {
             Label userLabel = new Label
             {
-                Text = $"[{DateTime.Now:HH:mm:ss}] {user}:",
+                Text = $"[{DateTime.Now:HH:mm}] {user}:",
                 AutoSize = true,
                 Font = new Font("Segoe UI", 9.75f, FontStyle.Regular)
             };
@@ -881,5 +893,57 @@ namespace Server
             }
             return $"{size:0.##} {suffixes[order]}";
         }
+
+        private void SendButton_Click(object sender, EventArgs e)
+        {
+            SendServerMessage();
+        }
+
+        // Gửi danh sách client cho mọi người
+        // Format: [USERLIST]|id1:username1|id2:username2|...
+        private void BroadcastUserList()
+        {
+            try
+            {
+                List<string> items = new List<string>();
+                foreach (var kvp in clients)
+                {
+                    items.Add($"{kvp.Key}:{kvp.Value.username}"); // username là StringBuilder
+                }
+
+                string msg = "[USERLIST]|" + string.Join("|", items);
+                // Gửi cho TẤT CẢ (id = -1)
+                Send(msg);
+            }
+            catch (Exception ex)
+            {
+                Log(ErrorMsg(ex.Message));
+            }
+        }
+
+        private void HandlePrivateMessage(string rawMsg, MyClient sender)
+        {
+            try
+            {
+                string[] parts = rawMsg.Split(new[] { '|' }, 3);
+                if (parts.Length < 3) return;
+
+                if (!long.TryParse(parts[1], out long targetId)) return;
+                string payload = parts[2]; // ví dụ: "Alice (private): Hello"
+
+                Log($"(PRIVATE) {payload}");
+
+                if (clients.TryGetValue(targetId, out MyClient target))
+                {
+                    // gửi riêng cho 1 client
+                    Send(payload, target);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(ErrorMsg(ex.Message));
+            }
+        }
     }
+
 }

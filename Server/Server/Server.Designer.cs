@@ -30,7 +30,6 @@ namespace Server
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -45,12 +44,7 @@ namespace Server
             this.clearButton = new System.Windows.Forms.Button();
             this.disconnectButton = new System.Windows.Forms.Button();
             this.sendTextBox = new System.Windows.Forms.TextBox();
-            this.sendLabel = new System.Windows.Forms.Label();
             this.clientsDataGridView = new System.Windows.Forms.DataGridView();
-            this.identifier = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dc = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.Message = new System.Windows.Forms.DataGridViewButtonColumn();
             this.totalLabel = new System.Windows.Forms.Label();
             this.usernameLabel = new System.Windows.Forms.Label();
             this.usernameTextBox = new System.Windows.Forms.TextBox();
@@ -60,8 +54,11 @@ namespace Server
             this.checkBox = new System.Windows.Forms.CheckBox();
             this.contentLabel = new System.Windows.Forms.Label();
             this.chatPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.clockLabel = new System.Windows.Forms.Label();
-            this.clockTimer = new System.Windows.Forms.Timer(this.components);
+            this.SendButton = new System.Windows.Forms.Button();
+            this.identifier = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dc = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.Message = new System.Windows.Forms.DataGridViewButtonColumn();
             ((System.ComponentModel.ISupportInitialize)(this.clientsDataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -138,25 +135,14 @@ namespace Server
             // 
             // sendTextBox
             // 
-            this.sendTextBox.Location = new System.Drawing.Point(13, 580);
+            this.sendTextBox.Location = new System.Drawing.Point(13, 559);
             this.sendTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.sendTextBox.Name = "sendTextBox";
             this.sendTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.sendTextBox.Size = new System.Drawing.Size(566, 22);
+            this.sendTextBox.Size = new System.Drawing.Size(486, 22);
             this.sendTextBox.TabIndex = 27;
             this.sendTextBox.TabStop = false;
             this.sendTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SendTextBox_KeyDown);
-            // 
-            // sendLabel
-            // 
-            this.sendLabel.AutoSize = true;
-            this.sendLabel.BackColor = System.Drawing.Color.Transparent;
-            this.sendLabel.Location = new System.Drawing.Point(10, 559);
-            this.sendLabel.Margin = new System.Windows.Forms.Padding(8, 4, 4, 4);
-            this.sendLabel.Name = "sendLabel";
-            this.sendLabel.Size = new System.Drawing.Size(39, 16);
-            this.sendLabel.TabIndex = 28;
-            this.sendLabel.Text = "Send";
             // 
             // clientsDataGridView
             // 
@@ -214,66 +200,11 @@ namespace Server
             this.clientsDataGridView.ShowCellToolTips = false;
             this.clientsDataGridView.ShowEditingIcon = false;
             this.clientsDataGridView.ShowRowErrors = false;
-            this.clientsDataGridView.Size = new System.Drawing.Size(341, 587);
+            this.clientsDataGridView.Size = new System.Drawing.Size(341, 570);
             this.clientsDataGridView.TabIndex = 30;
             this.clientsDataGridView.TabStop = false;
             this.clientsDataGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ClientsDataGridView_CellClick);
             this.clientsDataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.clientsDataGridView_CellContentClick);
-            // 
-            // identifier
-            // 
-            this.identifier.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.identifier.DefaultCellStyle = dataGridViewCellStyle2;
-            this.identifier.HeaderText = "ID";
-            this.identifier.MaxInputLength = 20;
-            this.identifier.MinimumWidth = 20;
-            this.identifier.Name = "identifier";
-            this.identifier.ReadOnly = true;
-            this.identifier.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.identifier.Width = 70;
-            // 
-            // name
-            // 
-            this.name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            this.name.DefaultCellStyle = dataGridViewCellStyle3;
-            this.name.HeaderText = "Name";
-            this.name.MaxInputLength = 20;
-            this.name.MinimumWidth = 20;
-            this.name.Name = "name";
-            this.name.ReadOnly = true;
-            this.name.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            // 
-            // dc
-            // 
-            this.dc.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dc.DefaultCellStyle = dataGridViewCellStyle4;
-            this.dc.HeaderText = "Disconnect";
-            this.dc.MinimumWidth = 20;
-            this.dc.Name = "dc";
-            this.dc.ReadOnly = true;
-            this.dc.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.dc.Text = "Kick";
-            this.dc.UseColumnTextForButtonValue = true;
-            this.dc.Width = 80;
-            // 
-            // Message
-            // 
-            this.Message.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.Message.DefaultCellStyle = dataGridViewCellStyle5;
-            this.Message.HeaderText = "Gửi tin nhắn";
-            this.Message.MinimumWidth = 20;
-            this.Message.Name = "Message";
-            this.Message.ReadOnly = true;
-            this.Message.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.Message.Text = "Gửi";
-            this.Message.UseColumnTextForButtonValue = true;
-            this.Message.Width = 80;
             // 
             // totalLabel
             // 
@@ -369,12 +300,12 @@ namespace Server
             // 
             this.contentLabel.AutoSize = true;
             this.contentLabel.BackColor = System.Drawing.Color.Transparent;
-            this.contentLabel.Location = new System.Drawing.Point(206, 123);
+            this.contentLabel.Location = new System.Drawing.Point(291, 129);
             this.contentLabel.Margin = new System.Windows.Forms.Padding(8, 4, 4, 4);
             this.contentLabel.Name = "contentLabel";
-            this.contentLabel.Size = new System.Drawing.Size(130, 16);
+            this.contentLabel.Size = new System.Drawing.Size(30, 16);
             this.contentLabel.TabIndex = 43;
-            this.contentLabel.Text = "Hoạt động & đính kèm";
+            this.contentLabel.Text = "Log";
             // 
             // chatPanel
             // 
@@ -384,30 +315,80 @@ namespace Server
             this.chatPanel.Location = new System.Drawing.Point(13, 159);
             this.chatPanel.Margin = new System.Windows.Forms.Padding(4);
             this.chatPanel.Name = "chatPanel";
-            this.chatPanel.Size = new System.Drawing.Size(566, 412);
+            this.chatPanel.Size = new System.Drawing.Size(566, 392);
             this.chatPanel.TabIndex = 44;
+            this.chatPanel.WrapContents = false;
             // 
-            // clockLabel
+            // SendButton
             // 
-            this.clockLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.clockLabel.AutoSize = true;
-            this.clockLabel.Location = new System.Drawing.Point(357, 104);
-            this.clockLabel.Name = "clockLabel";
-            this.clockLabel.Size = new System.Drawing.Size(122, 16);
-            this.clockLabel.TabIndex = 45;
-            this.clockLabel.Text = "00:00:00 01/01/2000";
+            this.SendButton.Location = new System.Drawing.Point(506, 558);
+            this.SendButton.Name = "SendButton";
+            this.SendButton.Size = new System.Drawing.Size(75, 25);
+            this.SendButton.TabIndex = 45;
+            this.SendButton.Text = "Send";
+            this.SendButton.UseVisualStyleBackColor = true;
+            this.SendButton.Click += new System.EventHandler(this.SendButton_Click);
             // 
-            // clockTimer
+            // identifier
             // 
-            this.clockTimer.Enabled = true;
-            this.clockTimer.Interval = 1000;
-            this.clockTimer.Tick += new System.EventHandler(this.ClockTimer_Tick);
+            this.identifier.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.identifier.DefaultCellStyle = dataGridViewCellStyle2;
+            this.identifier.HeaderText = "ID";
+            this.identifier.MaxInputLength = 20;
+            this.identifier.MinimumWidth = 20;
+            this.identifier.Name = "identifier";
+            this.identifier.ReadOnly = true;
+            this.identifier.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.identifier.Width = 70;
+            // 
+            // name
+            // 
+            this.name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            this.name.DefaultCellStyle = dataGridViewCellStyle3;
+            this.name.HeaderText = "Name";
+            this.name.MaxInputLength = 20;
+            this.name.MinimumWidth = 20;
+            this.name.Name = "name";
+            this.name.ReadOnly = true;
+            this.name.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            // 
+            // dc
+            // 
+            this.dc.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dc.DefaultCellStyle = dataGridViewCellStyle4;
+            this.dc.HeaderText = "Disconnect";
+            this.dc.MinimumWidth = 20;
+            this.dc.Name = "dc";
+            this.dc.ReadOnly = true;
+            this.dc.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.dc.Text = "Kick";
+            this.dc.UseColumnTextForButtonValue = true;
+            this.dc.Width = 80;
+            // 
+            // Message
+            // 
+            this.Message.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.Message.DefaultCellStyle = dataGridViewCellStyle5;
+            this.Message.HeaderText = "Gửi tin nhắn";
+            this.Message.MinimumWidth = 20;
+            this.Message.Name = "Message";
+            this.Message.ReadOnly = true;
+            this.Message.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.Message.Text = "Gửi";
+            this.Message.UseColumnTextForButtonValue = true;
+            this.Message.Width = 80;
             // 
             // Server
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(938, 620);
-            this.Controls.Add(this.clockLabel);
+            this.ClientSize = new System.Drawing.Size(938, 596);
+            this.Controls.Add(this.SendButton);
             this.Controls.Add(this.checkBox);
             this.Controls.Add(this.chatPanel);
             this.Controls.Add(this.contentLabel);
@@ -418,7 +399,6 @@ namespace Server
             this.Controls.Add(this.usernameLabel);
             this.Controls.Add(this.totalLabel);
             this.Controls.Add(this.clientsDataGridView);
-            this.Controls.Add(this.sendLabel);
             this.Controls.Add(this.sendTextBox);
             this.Controls.Add(this.disconnectButton);
             this.Controls.Add(this.clearButton);
@@ -449,7 +429,6 @@ namespace Server
         private System.Windows.Forms.Button clearButton;
         private System.Windows.Forms.Button disconnectButton;
         private System.Windows.Forms.TextBox sendTextBox;
-        private System.Windows.Forms.Label sendLabel;
         private System.Windows.Forms.DataGridView clientsDataGridView;
         private System.Windows.Forms.Label totalLabel;
         private System.Windows.Forms.Label usernameLabel;
@@ -458,14 +437,13 @@ namespace Server
         private System.Windows.Forms.Label keyLabel;
         private System.Windows.Forms.TextBox addrTextBox;
         private System.Windows.Forms.CheckBox checkBox;
-        private System.Windows.Forms.DataGridViewTextBoxColumn identifier;
-        private System.Windows.Forms.DataGridViewTextBoxColumn name;
-        private System.Windows.Forms.DataGridViewButtonColumn dc;
-        private System.Windows.Forms.DataGridViewButtonColumn Message;
         private System.Windows.Forms.Label contentLabel;
         private System.Windows.Forms.FlowLayoutPanel chatPanel;
-        private System.Windows.Forms.Label clockLabel;
-        private System.Windows.Forms.Timer clockTimer;
+        private Button SendButton;
+        private DataGridViewTextBoxColumn identifier;
+        private DataGridViewTextBoxColumn name;
+        private DataGridViewButtonColumn dc;
+        private DataGridViewButtonColumn Message;
     }
 }
 
