@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+# Visual Studio
+>>>>>>> 321eccad3a6255e5290f41de34b23d4a6869f083
 .vs/
 bin/
 obj/
@@ -9,4 +13,8 @@ obj/
 *.iobj
 *.ipdb
 *.cache
+<<<<<<< HEAD
 *.opendb
+=======
+*.opendb
+>>>>>>> 321eccad3a6255e5290f41de34b23d4a6869f083
