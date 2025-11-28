@@ -59,7 +59,7 @@
             this.connectButton.Size = new System.Drawing.Size(116, 28);
             this.connectButton.TabIndex = 28;
             this.connectButton.TabStop = false;
-            this.connectButton.Text = "Connect";
+            this.connectButton.Text = "Kết nối";
             this.connectButton.UseVisualStyleBackColor = true;
             this.connectButton.Click += new System.EventHandler(this.ConnectButton_Click);
             // 
@@ -69,9 +69,9 @@
             this.portLabel.Location = new System.Drawing.Point(412, 21);
             this.portLabel.Margin = new System.Windows.Forms.Padding(8, 4, 4, 4);
             this.portLabel.Name = "portLabel";
-            this.portLabel.Size = new System.Drawing.Size(34, 16);
+            this.portLabel.Size = new System.Drawing.Size(35, 13);
             this.portLabel.TabIndex = 27;
-            this.portLabel.Text = "Port:";
+            this.portLabel.Text = "Cổng:";
             // 
             // localaddrLabel
             // 
@@ -79,9 +79,9 @@
             this.localaddrLabel.Location = new System.Drawing.Point(213, 18);
             this.localaddrLabel.Margin = new System.Windows.Forms.Padding(8, 4, 4, 4);
             this.localaddrLabel.Name = "localaddrLabel";
-            this.localaddrLabel.Size = new System.Drawing.Size(61, 16);
+            this.localaddrLabel.Size = new System.Drawing.Size(43, 13);
             this.localaddrLabel.TabIndex = 26;
-            this.localaddrLabel.Text = "Address:";
+            this.localaddrLabel.Text = "Địa chỉ:";
             // 
             // portTextBox
             // 
@@ -89,7 +89,7 @@
             this.portTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.portTextBox.MaxLength = 10;
             this.portTextBox.Name = "portTextBox";
-            this.portTextBox.Size = new System.Drawing.Size(132, 22);
+            this.portTextBox.Size = new System.Drawing.Size(132, 20);
             this.portTextBox.TabIndex = 25;
             this.portTextBox.TabStop = false;
             this.portTextBox.Text = "9000";
@@ -102,7 +102,7 @@
             this.logLabel.Location = new System.Drawing.Point(284, 117);
             this.logLabel.Margin = new System.Windows.Forms.Padding(8, 4, 4, 4);
             this.logLabel.Name = "logLabel";
-            this.logLabel.Size = new System.Drawing.Size(30, 16);
+            this.logLabel.Size = new System.Drawing.Size(25, 13);
             this.logLabel.TabIndex = 31;
             this.logLabel.Text = "Log";
             // 
@@ -112,32 +112,32 @@
             this.sendTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.sendTextBox.Name = "sendTextBox";
             this.sendTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.sendTextBox.Size = new System.Drawing.Size(501, 22);
+            this.sendTextBox.Size = new System.Drawing.Size(501, 20);
             this.sendTextBox.TabIndex = 32;
             this.sendTextBox.TabStop = false;
             this.sendTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SendTextBox_KeyDown);
             // 
             // clearButton
             // 
-            this.clearButton.Location = new System.Drawing.Point(465, 102);
+            this.clearButton.Location = new System.Drawing.Point(465, 111);
             this.clearButton.Margin = new System.Windows.Forms.Padding(4);
             this.clearButton.Name = "clearButton";
             this.clearButton.Size = new System.Drawing.Size(116, 28);
             this.clearButton.TabIndex = 34;
             this.clearButton.TabStop = false;
-            this.clearButton.Text = "Clear";
+            this.clearButton.Text = "Xóa";
             this.clearButton.UseVisualStyleBackColor = true;
             this.clearButton.Click += new System.EventHandler(this.ClearButton_Click);
             // 
             // usernameLabel
             // 
             this.usernameLabel.AutoSize = true;
-            this.usernameLabel.Location = new System.Drawing.Point(203, 49);
+            this.usernameLabel.Location = new System.Drawing.Point(171, 49);
             this.usernameLabel.Margin = new System.Windows.Forms.Padding(8, 4, 4, 4);
             this.usernameLabel.Name = "usernameLabel";
-            this.usernameLabel.Size = new System.Drawing.Size(73, 16);
+            this.usernameLabel.Size = new System.Drawing.Size(85, 13);
             this.usernameLabel.TabIndex = 36;
-            this.usernameLabel.Text = "Username:";
+            this.usernameLabel.Text = "Tên người dùng:";
             // 
             // usernameTextBox
             // 
@@ -145,7 +145,7 @@
             this.usernameTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.usernameTextBox.MaxLength = 50;
             this.usernameTextBox.Name = "usernameTextBox";
-            this.usernameTextBox.Size = new System.Drawing.Size(132, 22);
+            this.usernameTextBox.Size = new System.Drawing.Size(132, 20);
             this.usernameTextBox.TabIndex = 35;
             this.usernameTextBox.TabStop = false;
             this.usernameTextBox.Text = "Client";
@@ -158,9 +158,9 @@
             this.keyLabel.Location = new System.Drawing.Point(413, 49);
             this.keyLabel.Margin = new System.Windows.Forms.Padding(8, 4, 4, 4);
             this.keyLabel.Name = "keyLabel";
-            this.keyLabel.Size = new System.Drawing.Size(33, 16);
+            this.keyLabel.Size = new System.Drawing.Size(35, 13);
             this.keyLabel.TabIndex = 38;
-            this.keyLabel.Text = "Key:";
+            this.keyLabel.Text = "Khóa:";
             // 
             // keyTextBox
             // 
@@ -169,7 +169,7 @@
             this.keyTextBox.MaxLength = 200;
             this.keyTextBox.Name = "keyTextBox";
             this.keyTextBox.PasswordChar = '*';
-            this.keyTextBox.Size = new System.Drawing.Size(132, 22);
+            this.keyTextBox.Size = new System.Drawing.Size(132, 20);
             this.keyTextBox.TabIndex = 37;
             this.keyTextBox.TabStop = false;
             this.keyTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -182,7 +182,7 @@
             this.addrTextBox.MaxLength = 200;
             this.addrTextBox.Name = "addrTextBox";
             this.addrTextBox.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.addrTextBox.Size = new System.Drawing.Size(132, 22);
+            this.addrTextBox.Size = new System.Drawing.Size(132, 20);
             this.addrTextBox.TabIndex = 39;
             this.addrTextBox.TabStop = false;
             this.addrTextBox.Text = "127.0.0.1";
@@ -198,9 +198,9 @@
             this.checkBox.Location = new System.Drawing.Point(449, 74);
             this.checkBox.Margin = new System.Windows.Forms.Padding(4);
             this.checkBox.Name = "checkBox";
-            this.checkBox.Size = new System.Drawing.Size(83, 20);
+            this.checkBox.Size = new System.Drawing.Size(66, 17);
             this.checkBox.TabIndex = 41;
-            this.checkBox.Text = "Hide key";
+            this.checkBox.Text = "Ẩn khóa";
             this.checkBox.UseVisualStyleBackColor = true;
             this.checkBox.CheckedChanged += new System.EventHandler(this.CheckBox_CheckedChanged);
             // 
@@ -212,7 +212,7 @@
             this.chatPanel.AutoScroll = true;
             this.chatPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.chatPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.chatPanel.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.chatPanel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chatPanel.Location = new System.Drawing.Point(13, 153);
             this.chatPanel.Name = "chatPanel";
             this.chatPanel.Size = new System.Drawing.Size(568, 287);
@@ -222,11 +222,11 @@
             // 
             // btnSend
             // 
-            this.btnSend.Location = new System.Drawing.Point(521, 446);
+            this.btnSend.Location = new System.Drawing.Point(502, 446);
             this.btnSend.Name = "btnSend";
-            this.btnSend.Size = new System.Drawing.Size(60, 22);
+            this.btnSend.Size = new System.Drawing.Size(79, 22);
             this.btnSend.TabIndex = 43;
-            this.btnSend.Text = "Attach";
+            this.btnSend.Text = "Đính kèm";
             this.btnSend.UseVisualStyleBackColor = true;
             this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
             // 
@@ -236,7 +236,7 @@
             this.btnSendText.Name = "btnSendText";
             this.btnSendText.Size = new System.Drawing.Size(60, 25);
             this.btnSendText.TabIndex = 44;
-            this.btnSendText.Text = "Send";
+            this.btnSendText.Text = "Gửi";
             this.btnSendText.UseVisualStyleBackColor = true;
             this.btnSendText.Click += new System.EventHandler(this.btnSendText_Click);
             // 
@@ -274,18 +274,18 @@
             // username
             // 
             this.username.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.username.HeaderText = "Username";
+            this.username.HeaderText = "Tên người dùng";
             this.username.MinimumWidth = 6;
             this.username.Name = "username";
             this.username.ReadOnly = true;
             // 
             // Message
             // 
-            this.Message.HeaderText = "Private";
+            this.Message.HeaderText = "Riêng tư";
             this.Message.MinimumWidth = 6;
             this.Message.Name = "Message";
             this.Message.ReadOnly = true;
-            this.Message.Text = "Message";
+            this.Message.Text = "Gửi";
             this.Message.UseColumnTextForButtonValue = true;
             this.Message.Width = 80;
             // 

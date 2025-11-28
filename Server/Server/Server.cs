@@ -57,7 +57,7 @@ namespace Server
                 {
                     AutoSize = true,
                     MaximumSize = new Size(maxWidth, 0),
-                    Text = string.Format("[ {0} ] {1}", DateTime.Now.ToString("HH:mm"), msg),
+                    Text = string.Format("[{0}] {1}", DateTime.Now.ToString("HH:mm"), msg),
                 };
 
                 chatPanel.Controls.Add(logEntry);
@@ -67,12 +67,12 @@ namespace Server
 
         private string ErrorMsg(string msg)
         {
-            return string.Format("ERROR: {0}", msg);
+            return string.Format("LỖI: {0}", msg);
         }
 
         private string SystemMsg(string msg)
         {
-            return string.Format("SYSTEM: {0}", msg);
+            return string.Format("HỆ THỐNG: {0}", msg);
         }
 
         private void Active(bool status)
@@ -88,8 +88,8 @@ namespace Server
                         portTextBox.Enabled = false;
                         usernameTextBox.Enabled = false;
                         keyTextBox.Enabled = false;
-                        startButton.Text = "Stop";
-                        Log(SystemMsg("Server has started"));
+                        startButton.Text = "Dừng";
+                        Log(SystemMsg("Server đã khởi động"));
                     }
                     else
                     {
@@ -97,8 +97,8 @@ namespace Server
                         portTextBox.Enabled = true;
                         usernameTextBox.Enabled = true;
                         keyTextBox.Enabled = true;
-                        startButton.Text = "Start";
-                        Log(SystemMsg("Server has stopped"));
+                        startButton.Text = "Khởi động";
+                        Log(SystemMsg("Server đã dừng"));
                     }
                 });
             }
@@ -112,7 +112,7 @@ namespace Server
                 {
                     string[] row = new string[] { id.ToString(), name };
                     clientsDataGridView.Rows.Add(row);
-                    totalLabel.Text = string.Format("Total clients: {0}", clientsDataGridView.Rows.Count);
+                    totalLabel.Text = string.Format("Tổng số client: {0}", clientsDataGridView.Rows.Count);
                 });
             }
         }
@@ -131,7 +131,7 @@ namespace Server
                             break;
                         }
                     }
-                    totalLabel.Text = string.Format("Total clients: {0}", clientsDataGridView.Rows.Count);
+                    totalLabel.Text = string.Format("Tổng số client: {0}", clientsDataGridView.Rows.Count);
                 });
             }
         }
@@ -165,14 +165,14 @@ namespace Server
                         {
                             if (rawMsg.StartsWith("[IMAGE]"))
                             {
-                                string logMsg = $"{obj.username} sent an image.";
+                                string logMsg = $"{obj.username} đã gửi một hình ảnh.";
                                 DisplayAttachment(rawMsg);
                                 Log(logMsg);
                                 Send(rawMsg, obj.id); // broadcast
                             }
                             else if (rawMsg.StartsWith("[FILE]"))
                             {
-                                string logMsg = $"{obj.username} sent a file.";
+                                string logMsg = $"{obj.username} đã gửi một tệp.";
                                 DisplayAttachment(rawMsg);
                                 Log(logMsg);
                                 Send(rawMsg, obj.id);
@@ -298,7 +298,7 @@ namespace Server
                 tcpClient = obj.client;
                 clients.TryAdd(obj.id, obj);
                 AddToGrid(obj.id, obj.username.ToString());
-                string msg = string.Format("{0} has connected", obj.username);
+                string msg = string.Format("{0} đã kết nối", obj.username);
                 Log(SystemMsg(msg));
                 Send(SystemMsg(msg), obj.id);
 
@@ -320,7 +320,7 @@ namespace Server
                 {
                     RemoveFromGrid(tmp.id);
 
-                    msg = string.Format("{0} has disconnected", tmp.username);
+                    msg = string.Format("{0} đã ngắt kết nối", tmp.username);
                     Log(SystemMsg(msg));
                     Send(SystemMsg(msg), tmp.id);   // nếu muốn client cũng thấy SYSTEM:
 
@@ -382,12 +382,16 @@ namespace Server
                 }
             }
         }
-
+        //check IP/Port trước khi start
         private void StartButton_Click(object sender, EventArgs e)
         {
             if (active)
             {
+                // ĐANG CHẠY → STOP SERVER
                 active = false;
+
+                // Thông báo cho tất cả client: server đã dừng, rồi ngắt kết nối
+                Disconnect(-1, "Server đã dừng");
             }
             else if (listener == null || !listener.IsAlive)
             {
@@ -399,33 +403,33 @@ namespace Server
                 if (address.Length < 1)
                 {
                     error = true;
-                    Log(SystemMsg("Address is required"));
+                    Log(SystemMsg("Cần nhập địa chỉ"));
                 }
                 else if (!TryResolveIPv4(address, out ip))
                 {
                     error = true;
-                    Log(SystemMsg("Address is not valid or is not IPv4"));
+                    Log(SystemMsg("Địa chỉ không hợp lệ hoặc không phải IPv4"));
                 }
                 int port = -1;
                 if (number.Length < 1)
                 {
                     error = true;
-                    Log(SystemMsg("Port number is required"));
+                    Log(SystemMsg("Cần nhập số cổng"));
                 }
                 else if (!int.TryParse(number, out port))
                 {
                     error = true;
-                    Log(SystemMsg("Port number is not valid"));
+                    Log(SystemMsg("Số cổng không hợp lệ"));
                 }
                 else if (port < 0 || port > 65535)
                 {
                     error = true;
-                    Log(SystemMsg("Port number is out of range"));
+                    Log(SystemMsg("Số cổng nằm ngoài phạm vi cho phép"));
                 }
                 if (username.Length < 1)
                 {
                     error = true;
-                    Log(SystemMsg("Username is required"));
+                    Log(SystemMsg("Cần nhập tên người dùng"));
                 }
                 if (!error)
                 {
@@ -441,32 +445,42 @@ namespace Server
         private void Write(IAsyncResult result)
         {
             MyClient obj = (MyClient)result.AsyncState;
-            if (obj.client.Connected)
+
+            try
             {
-                try
+                // Có thể check thêm null/Connected cho chắc
+                if (obj.client != null && obj.client.Connected && obj.stream != null)
                 {
                     obj.stream.EndWrite(result);
                 }
-                catch (Exception ex)
-                {
-                    Log(ErrorMsg(ex.Message));
-                }
+            }
+            catch (ObjectDisposedException)
+            {
+                // Stream/socket đã bị đóng trong lúc callback chạy → bỏ qua, không log lỗi
+            }
+            catch (Exception ex)
+            {
+                Log(ErrorMsg(ex.Message));
             }
         }
 
-        private void BeginWrite(string msg, MyClient obj) // send the message to a specific client
+        private void BeginWrite(string msg, MyClient obj)
         {
+            if (obj.client == null || obj.stream == null) return;
+            if (!obj.client.Connected || !obj.stream.CanWrite) return;
+
             byte[] buffer = Encoding.UTF8.GetBytes(msg);
-            if (obj.client.Connected)
+            try
             {
-                try
-                {
-                    obj.stream.BeginWrite(buffer, 0, buffer.Length, new AsyncCallback(Write), obj);
-                }
-                catch (Exception ex)
-                {
-                    Log(ErrorMsg(ex.Message));
-                }
+                obj.stream.BeginWrite(buffer, 0, buffer.Length, new AsyncCallback(Write), obj);
+            }
+            catch (ObjectDisposedException)
+            {
+                // socket đã đóng, bỏ qua
+            }
+            catch (Exception ex)
+            {
+                Log(ErrorMsg(ex.Message));
             }
         }
 
@@ -481,6 +495,10 @@ namespace Server
                     {
                         obj.Value.stream.BeginWrite(buffer, 0, buffer.Length, new AsyncCallback(Write), obj.Value);
                     }
+                    catch (ObjectDisposedException)
+                    {
+                        // socket đã đóng, bỏ qua
+                    }
                     catch (Exception ex)
                     {
                         Log(ErrorMsg(ex.Message));
@@ -491,6 +509,9 @@ namespace Server
 
         private void Send(string msg, MyClient obj)
         {
+            // server stop rồi thì không gửi nữa
+            if (!active) return;
+
             if (send == null || send.IsCompleted)
             {
                 send = Task.Factory.StartNew(() => BeginWrite(msg, obj));
@@ -503,26 +524,33 @@ namespace Server
 
         private void Send(string msg, long id = -1)
         {
+            // server stop rồi thì không gửi nữa
+            if (!active) return;
+
             if (send == null || send.IsCompleted)
             {
                 send = Task.Factory.StartNew(() => BeginWrite(msg, id));
             }
             else
             {
-                send.ContinueWith(antecendent => BeginWrite(msg, id));
+                send.ContinueWith(_ => BeginWrite(msg, id));
             }
         }
         private void SendServerMessage()
         {
-            if (sendTextBox.Text.Length > 0)
+            string msg = sendTextBox.Text.Trim();
+            if (msg.Length == 0) return;
+            // nếu server chưa chạy hoặc chưa có client = không gửi, không xóa
+            if (!active || clients.IsEmpty)
             {
-                string msg = sendTextBox.Text;
-                sendTextBox.Clear();
-
-                string user = usernameTextBox.Text.Trim();
-                Log(string.Format("{0} (You): {1}", user, msg));
-                Send(string.Format("{0}: {1}", user, msg));
+                return;
             }
+
+            sendTextBox.Clear();
+
+            string user = usernameTextBox.Text.Trim();
+            Log(string.Format("{0} (Bạn): {1}", user, msg));
+            Send(string.Format("{0}: {1}", user, msg));
         }
 
         private void SendTextBox_KeyDown(object sender, KeyEventArgs e)
@@ -544,71 +572,122 @@ namespace Server
                 StartButton_Click(sender, EventArgs.Empty);
             }
         }
-        private void ClientsDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex >= 0 && e.ColumnIndex == clientsDataGridView.Columns["dc"].Index)
-            {
-                long.TryParse(clientsDataGridView.Rows[e.RowIndex].Cells["identifier"].Value.ToString(), out long id);
-                Disconnect(id);
-            }
-            if (e.RowIndex >= 0 && e.ColumnIndex == clientsDataGridView.Columns["Message"].Index)
-            {
-                long clientId = Convert.ToInt64(clientsDataGridView.Rows[e.RowIndex].Cells["identifier"].Value);
-                using (Message messageForm = new Message(clientId))
-                {
-                    if (messageForm.ShowDialog() == DialogResult.OK)
-                    {
-                        string message = messageForm.MessageText;
-                        SendMessageToClient(message, clientId);
-                    }
-                }
-            }
-        }
         // Phương thức gửi tin nhắn cho client
         private void SendMessageToClient(string message, long clientId)
         {
             if (clients.TryGetValue(clientId, out MyClient client))
             {
-                string finalMsg = $"Server: {message}";
+                string finalMsg = $"Server (riêng): {message}";
 
                 byte[] buffer = Encoding.UTF8.GetBytes(finalMsg);
                 client.stream.BeginWrite(buffer, 0, buffer.Length, new AsyncCallback(Write), client);
-
-                Log($"Gửi tin nhắn riêng đến {client.username}: {message}");
             }
         }
+        private void ClientsDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0 && e.ColumnIndex == clientsDataGridView.Columns["dc"].Index)
+            {
+                long.TryParse(clientsDataGridView.Rows[e.RowIndex].Cells["identifier"].Value.ToString(), out long id);
+                Disconnect(id, "Bạn đã bị ngắt kết nối bởi server");
+            }
+            if (e.RowIndex >= 0 && e.ColumnIndex == clientsDataGridView.Columns["Message"].Index)
+            {
+                // Lấy id + username của client được chọn
+                string idStr = clientsDataGridView.Rows[e.RowIndex].Cells["identifier"].Value?.ToString();
+                string targetName = clientsDataGridView.Rows[e.RowIndex].Cells["username"].Value?.ToString();
 
+                if (!long.TryParse(idStr, out long clientId) || string.IsNullOrEmpty(targetName))
+                    return;
 
-        private void Disconnect(long id = -1) // disconnect everyone if ID is not supplied or is lesser than zero
+                // Mở form nhập tin nhắn riêng
+                string message = PromptPrivateMessage(targetName);
+                if (string.IsNullOrWhiteSpace(message))
+                    return;
+
+                // Gửi tin nhắn riêng
+                SendMessageToClient(message, clientId);
+
+                // Log thêm cho dễ nhìn
+                Log($"(Private to {targetName}) Server (Bạn): {message}");
+            }
+        }
+        private void clientsDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+        
+        // Ngắt kết nối 1 client (id >= 0) hoặc tất cả (id < 0)
+        // reason: thông báo SYSTEM gửi cho client trước khi đóng kết nối
+        private void Disconnect(long id = -1, string reason = null)
         {
             if (disconnect == null || !disconnect.IsAlive)
             {
                 disconnect = new Thread(() =>
                 {
+                    // Đá 1 client cụ thể
                     if (id >= 0)
                     {
                         if (clients.TryRemove(id, out MyClient obj))
                         {
+                            // 1. Gửi thông báo riêng cho client bị đá (GHI ĐỒNG BỘ)
+                            if (!string.IsNullOrEmpty(reason) &&
+                                obj.client != null &&
+                                obj.stream != null &&
+                                obj.client.Connected)
+                            {
+                                try
+                                {
+                                    string sys = SystemMsg(reason);
+                                    byte[] buf = Encoding.UTF8.GetBytes(sys);
+                                    obj.stream.Write(buf, 0, buf.Length); // ghi sync để chắc chắn client nhận
+                                }
+                                catch { }
+                            }
+
+                            // 2. Đóng kết nối tới client đó
                             try { obj.client.Close(); } catch { }
+
+                            // 3. Xóa khỏi grid
                             RemoveFromGrid(obj.id);
 
-                            string msg = $"{obj.username} has been disconnected by server";
-                            Log(SystemMsg(msg));
-                            Send(SystemMsg(msg), obj.id);
+                            // 4. Log + thông báo cho các client khác
+                            string msg = $"{obj.username} đã bị ngắt kết nối bởi server";
+                            Log(SystemMsg(msg));              // log trên server
+                            Send(SystemMsg(msg), obj.id);     // gửi cho TẤT CẢ TRỪ thằng bị đá
 
+                            // 5. Cập nhật lại userlist
                             BroadcastUserList();
                         }
                     }
+                    // Đá TẤT CẢ client
                     else
                     {
                         foreach (var kvp in clients)
                         {
                             if (clients.TryRemove(kvp.Key, out MyClient obj))
                             {
+                                // Gửi thông báo riêng cho từng client (server stop / disconnect all)
+                                if (!string.IsNullOrEmpty(reason) &&
+                                    obj.client != null &&
+                                    obj.stream != null &&
+                                    obj.client.Connected)
+                                {
+                                    try
+                                    {
+                                        string sys = SystemMsg(reason);
+                                        byte[] buf = Encoding.UTF8.GetBytes(sys);
+                                        obj.stream.Write(buf, 0, buf.Length);
+                                    }
+                                    catch { }
+                                }
+
                                 try { obj.client.Close(); } catch { }
                                 RemoveFromGrid(obj.id);
                             }
                         }
+
+                        // Sau khi clear hết → gửi lại userlist (lúc này hầu như rỗng)
+                        BroadcastUserList();
                     }
                 })
                 {
@@ -620,14 +699,17 @@ namespace Server
 
         private void DisconnectButton_Click(object sender, EventArgs e)
         {
-            Disconnect();
+            // Đang run server nhưng admin muốn đá hết client
+            Disconnect(-1, "Bạn đã bị ngắt kết nối bởi server");
         }
 
         private void Server_FormClosing(object sender, FormClosingEventArgs e)
         {
             exit = true;
             active = false;
-            Disconnect();
+
+            // Thông báo cho tất cả client: server đã dừng
+            Disconnect(-1, "Server đã dừng");
         }
 
         private void ClearButton_Click(object sender, EventArgs e)
@@ -640,14 +722,28 @@ namespace Server
             keyTextBox.PasswordChar = checkBox.Checked ? '*' : '\0';
         }
 
-        private void clientsDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
         private bool TryResolveIPv4(string host, out IPAddress ipAddress)
         {
             ipAddress = null;
+            if (string.IsNullOrWhiteSpace(host))
+            {
+                return false;           
+            }
+            // Bắt buộc phải đúng 4 phần ngăn bởi dấu chấm
+            string[] parts = host.Split('.');
+            if (parts.Length != 4)
+                return false;
+
+            foreach (string part in parts)
+            {
+                // Mỗi phần phải là số
+                if (!int.TryParse(part, out int octet))
+                    return false;
+
+                // Mỗi octet phải nằm trong [0,255]
+                if (octet < 0 || octet > 255)
+                    return false;
+            }
             if (IPAddress.TryParse(host, out IPAddress literal) && literal.AddressFamily == AddressFamily.InterNetwork)
             {
                 ipAddress = literal;
@@ -747,7 +843,7 @@ namespace Server
                     {
                         Text = fileName,
                         AutoSize = true,
-                        Font = new Font("Segoe UI", 9.75f, FontStyle.Underline),
+                        Font = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Underline),
                         ForeColor = Color.Blue,
                         Cursor = Cursors.Hand,
                         Margin = new Padding(0, 6, 6, 0)
@@ -784,7 +880,7 @@ namespace Server
             {
                 Text = $"[{DateTime.Now:HH:mm}] {user}:",
                 AutoSize = true,
-                Font = new Font("Segoe UI", 9.75f, FontStyle.Regular)
+                Font = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Regular)
             };
             chatPanel.Controls.Add(userLabel);
         }
@@ -859,7 +955,7 @@ namespace Server
                 MessageBox.Show($"Không thể lưu tệp: {ex.Message}");
             }
         }
-
+        //phóng to ảnh
         private void ShowImageViewer(string fileName, Image preview)
         {
             Form viewer = new Form
@@ -931,7 +1027,7 @@ namespace Server
                 if (!long.TryParse(parts[1], out long targetId)) return;
                 string payload = parts[2]; // ví dụ: "Alice (private): Hello"
 
-                Log($"(PRIVATE) {payload}");
+                Log($"(RIÊNG) {payload}");
 
                 if (clients.TryGetValue(targetId, out MyClient target))
                 {
@@ -944,6 +1040,41 @@ namespace Server
                 Log(ErrorMsg(ex.Message));
             }
         }
+        //Form gửi tin nhắn riêng
+        private string PromptPrivateMessage(string targetName)
+        {
+            using (Form f = new Form())
+            {
+                f.Text = "Tin nhắn riêng gửi đến " + targetName;
+                f.StartPosition = FormStartPosition.CenterParent;
+                f.Size = new Size(400, 200);
+
+                TextBox txt = new TextBox
+                {
+                    Multiline = true,
+                    Dock = DockStyle.Fill
+                };
+
+                Button btn = new Button
+                {
+                    Text = "Gửi",
+                    DialogResult = DialogResult.OK,
+                    Dock = DockStyle.Bottom,
+                    Height = 30
+                };
+
+                f.Controls.Add(txt);
+                f.Controls.Add(btn);
+                f.AcceptButton = btn;
+
+                if (f.ShowDialog(this) == DialogResult.OK)
+                {
+                    return txt.Text.Trim();
+                }
+                return string.Empty;
+            }
+        }
+
     }
 
 }

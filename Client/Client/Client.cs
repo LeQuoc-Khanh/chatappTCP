@@ -63,9 +63,9 @@ namespace Client
 
 
         //Trả về tin nhắn lỗi
-        private string ErrorMsg(string msg) => $"ERROR: {msg}";
+        private string ErrorMsg(string msg) => $"LỖI: {msg}";
         //Trả về tin nhắn hệ thống
-        private string SystemMsg(string msg) => $"SYSTEM: {msg}";
+        private string SystemMsg(string msg) => $"HỆ THỐNG: {msg}";
         //Cập nhật trạng thái kết nối và ui
         private void Connected(bool status)
         {
@@ -78,8 +78,14 @@ namespace Client
                     portTextBox.Enabled = !status;
                     usernameTextBox.Enabled = !status;
                     keyTextBox.Enabled = !status;
-                    connectButton.Text = status ? "Disconnect" : "Connect";
-                    Log(SystemMsg(status ? "You are now connected" : "You are now disconnected"));
+                    connectButton.Text = status ? "Ngắt kết nối" : "Kết nối";
+                    Log(SystemMsg(status ? "Bạn đã kết nối" : "Bạn đã ngắt kết nối"));
+
+                    //nếu đã ngắt kết nối thì xóa luôn userlist cũ
+                    if (!status)
+                    {
+                        clientsDataGridView.Rows.Clear();
+                    }
                 });
             }
         }
@@ -155,7 +161,7 @@ namespace Client
                     {
                         Text = fileName,
                         AutoSize = true,
-                        Font = new Font("Segoe UI", 9.75f, FontStyle.Underline),
+                        Font = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Underline),
                         ForeColor = Color.Blue,
                         Cursor = Cursors.Hand,
                         Margin = new Padding(0, 6, 6, 0)
@@ -189,7 +195,7 @@ namespace Client
                 {
                     Text = $"[{DateTime.Now:HH:mm}] {msg}",
                     AutoSize = true,
-                    Font = new Font("Segoe UI", 9.75f, FontStyle.Regular)
+                    Font = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Regular)
                 };
                 chatPanel.Controls.Add(lbl);
             });
@@ -237,7 +243,7 @@ namespace Client
             {
                 Text = $"[{DateTime.Now:HH:mm}] {user}:",
                 AutoSize = true,
-                Font = new Font("Segoe UI", 9.75f, FontStyle.Regular)
+                Font = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Regular)
             };
             chatPanel.Controls.Add(userLabel);
         }
@@ -408,7 +414,7 @@ namespace Client
                     bool signaled = obj.handle.WaitOne(AuthorizationTimeoutMs);
                     if (!signaled)
                     {
-                        Log(SystemMsg("Authorization timed out"));
+                        Log(SystemMsg("Hết thời gian chờ xác thực"));
                         obj.client.Close();
                         break;
                     }
@@ -420,11 +426,11 @@ namespace Client
                 }
                 catch (Exception ex) { Log(ErrorMsg(ex.Message)); }
             }
-            if (!connected) Log(SystemMsg("Unauthorized"));
+            if (!connected) Log(SystemMsg("Không được xác thực"));
             return success;
         }
 
-        private void Connection(IPAddress ip, int port, string username, string key)
+        private void Connection(string address, int port, string username, string key)
         {
             try
             {
@@ -434,11 +440,24 @@ namespace Client
                     key = key,
                     client = new TcpClient()
                 };
-                obj.client.Connect(ip, port);
+
+                try
+                {
+                    // Thử kết nối
+                    obj.client.Connect(address, port);
+                }
+                catch (SocketException)
+                {
+                    // Sai IP, sai port, server không chạy, không ping được...
+                    Log(SystemMsg("Không thể kết nối đến server (địa chỉ/cổng không đúng hoặc server không chạy)."));
+                    return;
+                }
+
                 obj.stream = obj.client.GetStream();
                 obj.buffer = new byte[obj.client.ReceiveBufferSize];
                 obj.data = new StringBuilder();
                 obj.handle = new EventWaitHandle(false, EventResetMode.AutoReset);
+
                 if (Authorize())
                 {
                     while (obj.client.Connected)
@@ -450,13 +469,17 @@ namespace Client
                     Connected(false);
                 }
             }
-            catch (Exception ex) { Log(ErrorMsg(ex.Message)); }
+            catch (Exception ex)
+            {
+                Log(ErrorMsg(ex.Message));
+            }
         }
 
         private void ConnectButton_Click(object sender, EventArgs e)
         {
             if (connected)
             {
+                // Đang kết nối thì bấm nút sẽ ngắt
                 obj.client.Close();
             }
             else if (client == null || !client.IsAlive)
@@ -465,23 +488,51 @@ namespace Client
                 string address = addrTextBox.Text.Trim();
                 string number = portTextBox.Text.Trim();
                 string username = usernameTextBox.Text.Trim();
-                IPAddress ip = null;
-                if (!TryResolveIPv4(address, out ip))
+
+                // 1. ĐỊA CHỈ BỎ TRỐNG
+                if (string.IsNullOrWhiteSpace(address))
                 {
                     error = true;
-                    Log(SystemMsg("Invalid address (must resolve to IPv4)"));
+                    Log(SystemMsg("Cần nhập địa chỉ server"));
                 }
 
-                if (!int.TryParse(number, out int port)) { error = true; Log(SystemMsg("Invalid port")); }
-                if (username.Length < 1) { error = true; Log(SystemMsg("Username required")); }
+                int port = 0;
 
+                // 2. CỔNG BỎ TRỐNG
+                if (string.IsNullOrWhiteSpace(number))
+                {
+                    error = true;
+                    Log(SystemMsg("Cần nhập cổng server"));
+                }
+                else
+                {
+                    // Không bỏ trống nhưng không parse được / ngoài khoảng hợp lệ
+                    if (!int.TryParse(number, out port) || port <= 0 || port > 65535)
+                    {
+                        error = true;
+                        Log(SystemMsg("Không thể kết nối đến server (địa chỉ/cổng không đúng hoặc server không chạy)."));
+                    }
+                }
+
+                // 3. USERNAME
+                if (string.IsNullOrWhiteSpace(username))
+                {
+                    error = true;
+                    Log(SystemMsg("Cần nhập tên người dùng"));
+                }
+
+                // 4. Nếu không có lỗi nhập liệu → thử kết nối
                 if (!error)
                 {
-                    client = new Thread(() => Connection(ip, port, username, keyTextBox.Text)) { IsBackground = true };
+                    client = new Thread(() => Connection(address, port, username, keyTextBox.Text))
+                    {
+                        IsBackground = true
+                    };
                     client.Start();
                 }
             }
         }
+
 
         private void Write(IAsyncResult result)
         {
@@ -515,8 +566,8 @@ namespace Client
         {
             if (!connected) return;
             ContextMenuStrip menu = new ContextMenuStrip();
-            menu.Items.Add("Image", null, (s, ev) => SendImage());
-            menu.Items.Add("File", null, (s, ev) => SendFile());
+            menu.Items.Add("Ảnh", null, (s, ev) => SendImage());
+            menu.Items.Add("Tệp", null, (s, ev) => SendFile());
             menu.Items.Add("Emoji", null, (s, ev) => SendEmoji());
             menu.Show(Cursor.Position);
         }
@@ -535,7 +586,12 @@ namespace Client
                 FileInfo fileInfo = new FileInfo(filePath);
                 if (fileInfo.Length > AttachmentLimitBytes)
                 {
-                    MessageBox.Show($"Image exceeds {AttachmentLimitBytes / (1024 * 1024)} MB limit.");
+                    MessageBox.Show(
+                        $"Ảnh vượt quá giới hạn {AttachmentLimitBytes / (1024 * 1024)} MB.",
+                        "Lỗi",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning
+                    );
                     return;
                 }
                 string fileName = Path.GetFileName(filePath);
@@ -564,7 +620,12 @@ namespace Client
                 FileInfo fileInfo = new FileInfo(filePath);
                 if (fileInfo.Length > AttachmentLimitBytes)
                 {
-                    MessageBox.Show($"File exceeds {AttachmentLimitBytes / (1024 * 1024)} MB limit.");
+                    MessageBox.Show(
+                        $"Tệp vượt quá giới hạn {AttachmentLimitBytes / (1024 * 1024)} MB.",
+                        "Lỗi",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning
+                    );
                     return;
                 }
                 string fileName = Path.GetFileName(filePath);
@@ -588,7 +649,7 @@ namespace Client
             string[] emojis = { "😀", "😂", "😍", "😎", "😭", "😡", "👍", "❤️" };
             Form picker = new Form
             {
-                Text = "Select Emoji",
+                Text = "Chọn Emoji",
                 StartPosition = FormStartPosition.CenterParent,
                 Size = new Size(400, 200)
             };
@@ -632,7 +693,7 @@ namespace Client
             if (msg.Length == 0) return;
 
             // Hiện lên màn hình cho chính mình
-            DisplayMessage($"{obj.username} (You): {msg}");
+            DisplayMessage($"{obj.username} (Bạn): {msg}");
 
             // Gửi cho server (server sẽ forward cho client khác)
             Send($"{obj.username}: {msg}");
@@ -675,34 +736,6 @@ namespace Client
 
         }
 
-        private bool TryResolveIPv4(string host, out IPAddress address)
-        {
-            address = null;
-            if (IPAddress.TryParse(host, out IPAddress literal) && literal.AddressFamily == AddressFamily.InterNetwork)
-            {
-                address = literal;
-                return true;
-            }
-
-            try
-            {
-                foreach (IPAddress candidate in Dns.GetHostEntry(host).AddressList)
-                {
-                    if (candidate.AddressFamily == AddressFamily.InterNetwork)
-                    {
-                        address = candidate;
-                        return true;
-                    }
-                }
-            }
-            catch
-            {
-                // ignored - caller will display a friendly error
-            }
-
-            return false;
-        }
-
         private void btnSendText_Click(object sender, EventArgs e)
         {
             SendTextMessage();
@@ -726,10 +759,10 @@ namespace Client
                 if (string.IsNullOrWhiteSpace(text)) return;
 
                 // Hiện cho chính mình
-                DisplayMessage($"(Private to {targetName}) {obj.username}: {text}");
+                DisplayMessage($"(Riêng tới {targetName}) {obj.username}: {text}");
 
                 // Gửi lên server
-                string payload = $"{obj.username} (private): {text}";
+                string payload = $"{obj.username} (riêng): {text}";
                 string msg = $"[PRIVATE]|{targetId}|{payload}";
                 Send(msg);
             }
@@ -737,15 +770,31 @@ namespace Client
 
         private void HandleIncomingMessage(string message)
         {
-            if (message.StartsWith("[USERLIST]"))
+            // Có thể server gửi 2–3 message dính lại trong 1 lần đọc
+            // Ví dụ: "HỆ THỐNG: A has disconnected[USERLIST]|..."
+            int idx = message.IndexOf("[USERLIST]");
+            if (idx >= 0)
             {
-                UpdateClientGrid(message);
+                // Phần trước [USERLIST] (log hệ thống, chat text,...)
+                string before = message.Substring(0, idx).Trim();
+                // Phần từ [USERLIST] trở đi
+                string userListPart = message.Substring(idx);
+
+                if (!string.IsNullOrEmpty(before))
+                {
+                    DisplayMessage(before);
+                }
+
+                // Cập nhật lại bảng user từ gói [USERLIST]
+                UpdateClientGrid(userListPart);
             }
             else
             {
+                // Không có [USERLIST] → chỉ là tin nhắn thường
                 DisplayMessage(message);
             }
         }
+
 
         // message format: [USERLIST]|id1:username1|id2:username2|...
         private void UpdateClientGrid(string message)
@@ -794,7 +843,7 @@ namespace Client
         {
             using (Form f = new Form())
             {
-                f.Text = "Private message to " + targetName;
+                f.Text = "Tin nhắn riêng gửi đến " + targetName;
                 f.StartPosition = FormStartPosition.CenterParent;
                 f.Size = new Size(400, 200);
 
@@ -806,7 +855,7 @@ namespace Client
 
                 Button btn = new Button
                 {
-                    Text = "Send",
+                    Text = "Gửi",
                     DialogResult = DialogResult.OK,
                     Dock = DockStyle.Bottom,
                     Height = 30

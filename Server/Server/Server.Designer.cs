@@ -56,7 +56,7 @@ namespace Server
             this.chatPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.SendButton = new System.Windows.Forms.Button();
             this.identifier = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.username = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dc = new System.Windows.Forms.DataGridViewButtonColumn();
             this.Message = new System.Windows.Forms.DataGridViewButtonColumn();
             ((System.ComponentModel.ISupportInitialize)(this.clientsDataGridView)).BeginInit();
@@ -70,7 +70,7 @@ namespace Server
             this.startButton.Size = new System.Drawing.Size(116, 28);
             this.startButton.TabIndex = 23;
             this.startButton.TabStop = false;
-            this.startButton.Text = "Start";
+            this.startButton.Text = "Khởi động";
             this.startButton.UseVisualStyleBackColor = true;
             this.startButton.Click += new System.EventHandler(this.StartButton_Click);
             // 
@@ -81,9 +81,9 @@ namespace Server
             this.portLabel.Location = new System.Drawing.Point(410, 21);
             this.portLabel.Margin = new System.Windows.Forms.Padding(8, 4, 4, 4);
             this.portLabel.Name = "portLabel";
-            this.portLabel.Size = new System.Drawing.Size(34, 16);
+            this.portLabel.Size = new System.Drawing.Size(42, 16);
             this.portLabel.TabIndex = 22;
-            this.portLabel.Text = "Port:";
+            this.portLabel.Text = "Cổng:";
             // 
             // localaddrLabel
             // 
@@ -92,9 +92,9 @@ namespace Server
             this.localaddrLabel.Location = new System.Drawing.Point(210, 21);
             this.localaddrLabel.Margin = new System.Windows.Forms.Padding(8, 4, 4, 4);
             this.localaddrLabel.Name = "localaddrLabel";
-            this.localaddrLabel.Size = new System.Drawing.Size(61, 16);
+            this.localaddrLabel.Size = new System.Drawing.Size(50, 16);
             this.localaddrLabel.TabIndex = 21;
-            this.localaddrLabel.Text = "Address:";
+            this.localaddrLabel.Text = "Địa chỉ:";
             // 
             // portTextBox
             // 
@@ -117,7 +117,7 @@ namespace Server
             this.clearButton.Size = new System.Drawing.Size(116, 28);
             this.clearButton.TabIndex = 25;
             this.clearButton.TabStop = false;
-            this.clearButton.Text = "Clear";
+            this.clearButton.Text = "Xóa";
             this.clearButton.UseVisualStyleBackColor = true;
             this.clearButton.Click += new System.EventHandler(this.ClearButton_Click);
             // 
@@ -129,7 +129,7 @@ namespace Server
             this.disconnectButton.Size = new System.Drawing.Size(116, 28);
             this.disconnectButton.TabIndex = 26;
             this.disconnectButton.TabStop = false;
-            this.disconnectButton.Text = "Disconnect all";
+            this.disconnectButton.Text = "Đá tất cả";
             this.disconnectButton.UseVisualStyleBackColor = true;
             this.disconnectButton.Click += new System.EventHandler(this.DisconnectButton_Click);
             // 
@@ -166,7 +166,7 @@ namespace Server
             this.clientsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.clientsDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.identifier,
-            this.name,
+            this.username,
             this.dc,
             this.Message});
             this.clientsDataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
@@ -211,24 +211,24 @@ namespace Server
             this.totalLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.totalLabel.BackColor = System.Drawing.Color.Transparent;
             this.totalLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.totalLabel.Location = new System.Drawing.Point(489, 102);
+            this.totalLabel.Location = new System.Drawing.Point(473, 102);
             this.totalLabel.Margin = new System.Windows.Forms.Padding(8, 4, 4, 4);
             this.totalLabel.Name = "totalLabel";
             this.totalLabel.Size = new System.Drawing.Size(90, 13);
             this.totalLabel.TabIndex = 31;
-            this.totalLabel.Text = "Total clients: 0";
+            this.totalLabel.Text = "Tổng số client: 0";
             this.totalLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // usernameLabel
             // 
             this.usernameLabel.AutoSize = true;
             this.usernameLabel.BackColor = System.Drawing.Color.Transparent;
-            this.usernameLabel.Location = new System.Drawing.Point(206, 49);
+            this.usernameLabel.Location = new System.Drawing.Point(170, 49);
             this.usernameLabel.Margin = new System.Windows.Forms.Padding(8, 4, 4, 4);
             this.usernameLabel.Name = "usernameLabel";
-            this.usernameLabel.Size = new System.Drawing.Size(66, 16);
+            this.usernameLabel.Size = new System.Drawing.Size(103, 16);
             this.usernameLabel.TabIndex = 33;
-            this.usernameLabel.Text = "Userame:";
+            this.usernameLabel.Text = "Tên người dùng:";
             // 
             // usernameTextBox
             // 
@@ -263,9 +263,9 @@ namespace Server
             this.keyLabel.Location = new System.Drawing.Point(411, 49);
             this.keyLabel.Margin = new System.Windows.Forms.Padding(8, 4, 4, 4);
             this.keyLabel.Name = "keyLabel";
-            this.keyLabel.Size = new System.Drawing.Size(33, 16);
+            this.keyLabel.Size = new System.Drawing.Size(41, 16);
             this.keyLabel.TabIndex = 35;
-            this.keyLabel.Text = "Key:";
+            this.keyLabel.Text = "Khóa:";
             // 
             // addrTextBox
             // 
@@ -290,9 +290,9 @@ namespace Server
             this.checkBox.Location = new System.Drawing.Point(447, 74);
             this.checkBox.Margin = new System.Windows.Forms.Padding(4);
             this.checkBox.Name = "checkBox";
-            this.checkBox.Size = new System.Drawing.Size(83, 20);
+            this.checkBox.Size = new System.Drawing.Size(78, 20);
             this.checkBox.TabIndex = 42;
-            this.checkBox.Text = "Hide key";
+            this.checkBox.Text = "Ẩn khóa";
             this.checkBox.UseVisualStyleBackColor = false;
             this.checkBox.CheckedChanged += new System.EventHandler(this.CheckBox_CheckedChanged);
             // 
@@ -325,7 +325,7 @@ namespace Server
             this.SendButton.Name = "SendButton";
             this.SendButton.Size = new System.Drawing.Size(75, 25);
             this.SendButton.TabIndex = 45;
-            this.SendButton.Text = "Send";
+            this.SendButton.Text = "Gửi";
             this.SendButton.UseVisualStyleBackColor = true;
             this.SendButton.Click += new System.EventHandler(this.SendButton_Click);
             // 
@@ -342,17 +342,17 @@ namespace Server
             this.identifier.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.identifier.Width = 70;
             // 
-            // name
+            // username
             // 
-            this.name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.username.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            this.name.DefaultCellStyle = dataGridViewCellStyle3;
-            this.name.HeaderText = "Name";
-            this.name.MaxInputLength = 20;
-            this.name.MinimumWidth = 20;
-            this.name.Name = "name";
-            this.name.ReadOnly = true;
-            this.name.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.username.DefaultCellStyle = dataGridViewCellStyle3;
+            this.username.HeaderText = "Tên người dùng";
+            this.username.MaxInputLength = 20;
+            this.username.MinimumWidth = 20;
+            this.username.Name = "username";
+            this.username.ReadOnly = true;
+            this.username.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             // 
             // dc
             // 
@@ -360,12 +360,12 @@ namespace Server
             dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dc.DefaultCellStyle = dataGridViewCellStyle4;
-            this.dc.HeaderText = "Disconnect";
+            this.dc.HeaderText = "Ngắt kết nối";
             this.dc.MinimumWidth = 20;
             this.dc.Name = "dc";
             this.dc.ReadOnly = true;
             this.dc.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.dc.Text = "Kick";
+            this.dc.Text = "Đá";
             this.dc.UseColumnTextForButtonValue = true;
             this.dc.Width = 80;
             // 
@@ -441,7 +441,7 @@ namespace Server
         private System.Windows.Forms.FlowLayoutPanel chatPanel;
         private Button SendButton;
         private DataGridViewTextBoxColumn identifier;
-        private DataGridViewTextBoxColumn name;
+        private DataGridViewTextBoxColumn username;
         private DataGridViewButtonColumn dc;
         private DataGridViewButtonColumn Message;
     }
